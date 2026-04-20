@@ -1,0 +1,3 @@
+[submodule "trd-blitzai"]
+	path = trd-blitzai
+	url = https://github.com/mbishopfx/trd-blitzai.git
