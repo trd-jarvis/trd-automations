@@ -32,6 +32,26 @@
     "targetAreas": ["Springfield, MO", "Nixa, MO", "Ozark, MO"],
     "icp": "Local home service businesses with weak AI visibility and under-optimized local authority signals.",
     "primaryOffer": "AI visibility optimization, entity authority cleanup, and local lead generation.",
+    "leadSearchCategories": [
+      "roofing contractor",
+      "water damage restoration service",
+      "foundation repair contractor",
+      "personal injury lawyer",
+      "plumbing service",
+      "tree service",
+      "kitchen remodeler",
+      "med spa",
+      "plastic surgeon",
+      "pool contractor"
+    ],
+    "leadSearchLocations": [
+      "Brooklyn NY",
+      "Queens NY",
+      "Manhattan NY",
+      "Jersey City NJ",
+      "Newark NJ",
+      "Stamford CT"
+    ],
     "leadBatchPolicy": {
       "batchSize": 200,
       "targetStates": ["NY", "NJ", "CT"],
@@ -42,6 +62,80 @@
       "positiveReport": "weekdays 8:00 AM Eastern",
       "readinessAudit": "weekdays 9:00 AM Eastern",
       "postQueue": "weekdays 9:30 AM Eastern",
+      "leadGeneration": "weekdays 7:00 AM Eastern",
+      "joseQueue": "weekdays 7:45 AM Eastern"
+    }
+  },
+  {
+    "id": "trd-outbound-prospects",
+    "name": "TRD Outbound Prospect Pool",
+    "brandTerms": ["True Rank Digital", "TRD AI Visibility", "TRD Blitz"],
+    "domains": ["truerankdigital.com"],
+    "startUrls": ["https://truerankdigital.com/"],
+    "reportRecipients": ["jon@truerankdigital.com"],
+    "reportCc": ["bishop@truerankdigital.com"],
+    "internalRecipients": [
+      "jose@truerankdigital.com",
+      "jon@truerankdigital.com",
+      "eric@truerankdigital.com",
+      "jesse@truerankdigital.com",
+      "bishop@truerankdigital.com"
+    ],
+    "blitzClientName": "True Rank Digital",
+    "blitzUrl": "https://trd-aiblitz.vercel.app/dashboard/blitz",
+    "websiteUrl": "https://truerankdigital.com",
+    "workerKeys": ["gbp-weakness-scan"],
+    "seedQueries": [
+      "best local seo agency for service businesses",
+      "google business profile management agency",
+      "ai visibility agency for local businesses"
+    ],
+    "targetAreas": [
+      "New York, NY",
+      "Brooklyn, NY",
+      "Queens, NY",
+      "Jersey City, NJ",
+      "Newark, NJ",
+      "Stamford, CT",
+      "Bridgeport, CT"
+    ],
+    "icp": "Tri-state service businesses with high-ticket offers, weak GBP authority, inconsistent review depth, and obvious AI/local visibility gaps.",
+    "primaryOffer": "AI visibility, Blitz GBP operations, local entity authority, and outbound appointment generation.",
+    "leadSearchCategories": [
+      "roofing contractor",
+      "water damage restoration service",
+      "foundation repair contractor",
+      "personal injury lawyer",
+      "plumbing service",
+      "tree service",
+      "kitchen remodeler",
+      "med spa",
+      "plastic surgeon",
+      "pool contractor",
+      "hardscaping contractor",
+      "hvac contractor"
+    ],
+    "leadSearchLocations": [
+      "Brooklyn NY",
+      "Queens NY",
+      "Manhattan NY",
+      "Bronx NY",
+      "Staten Island NY",
+      "Jersey City NJ",
+      "Newark NJ",
+      "Elizabeth NJ",
+      "Paterson NJ",
+      "Stamford CT",
+      "Bridgeport CT",
+      "New Haven CT"
+    ],
+    "leadBatchPolicy": {
+      "batchSize": 200,
+      "targetStates": ["NY", "NJ", "CT"],
+      "businessModel": "service",
+      "marketTier": "high-ticket"
+    },
+    "automationCadence": {
       "leadGeneration": "weekdays 7:00 AM Eastern",
       "joseQueue": "weekdays 7:45 AM Eastern"
     }

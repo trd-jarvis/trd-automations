@@ -163,6 +163,116 @@ export function queueBlitzReadinessAnnouncement(input: {
   });
 }
 
+export function queueApifyWorkerDigestAnnouncement(input: {
+  recipient: string;
+  cc: string[];
+  accountCount: number;
+  planTier: string;
+  monthlyCreditsUsd: number;
+  spend24hUsd: number;
+  spend7dUsd: number;
+  workerCount: number;
+  healthyWorkers: number;
+  degradedWorkers: number;
+  actorCreditsUrl?: string;
+  artifactPath?: string;
+  workerHighlights: Array<{
+    label: string;
+    status: string;
+    spend24hUsd: number;
+    lastRunStatus: string;
+  }>;
+}): { announcementId: string; htmlPath: string } {
+  const topHighlights = input.workerHighlights.slice(0, 4);
+  return writeAnnouncement({
+    key: "apify-worker-digest",
+    audience: "internal",
+    title: "Apify worker health and usage digest",
+    summary: "The latest Apify worker check captures current actor readiness, recent spend, and the signals that matter before tomorrow's outbound runs start.",
+    recipient: input.recipient,
+    cc: input.cc,
+    ctas: [
+      input.actorCreditsUrl ? { label: "Open Apify Console", url: input.actorCreditsUrl } : null
+    ].filter((entry): entry is { label: string; url: string } => Boolean(entry)),
+    metrics: [
+      { label: "Accounts", value: String(input.accountCount), tone: "neutral" },
+      { label: "Monthly credits", value: `$${input.monthlyCreditsUsd.toFixed(2)}`, tone: "accent" },
+      { label: "24h spend", value: `$${input.spend24hUsd.toFixed(3)}`, tone: "warning" },
+      { label: "7d spend", value: `$${input.spend7dUsd.toFixed(3)}`, tone: "success" }
+    ],
+    chart: {
+      label: "Worker status mix",
+      bars: [
+        { label: "Healthy", value: input.healthyWorkers, tone: "sage" },
+        { label: "Degraded", value: input.degradedWorkers, tone: "amber" },
+        { label: "Configured", value: input.workerCount, tone: "slate" }
+      ]
+    },
+    sections: [
+      {
+        heading: "Digest scope",
+        body: `This run checked ${input.workerCount} configured Apify-backed workers and compared recent statuses plus observed spend across ${input.accountCount} Apify accounts: ${input.planTier}.`
+      },
+      {
+        heading: "Most relevant workers",
+        body: topHighlights.length > 0
+          ? topHighlights.map((entry) => `${entry.label}: ${entry.status}; 24h spend $${entry.spend24hUsd.toFixed(3)}; last run ${entry.lastRunStatus}.`).join(" ")
+          : "No Apify-backed workers were configured."
+      },
+      {
+        heading: "Operator note",
+        body: "If credits tighten or workers start degrading, pause higher-volume lead runs before voice prep so the outbound stack does not consume the last available budget on low-signal scraping."
+      }
+    ],
+    artifactPath: input.artifactPath
+  });
+}
+
+export function queueApifyActorDiscoveryAnnouncement(input: {
+  recipient: string;
+  cc: string[];
+  candidateCount: number;
+  topCandidates: Array<{
+    title: string;
+    url: string;
+    score: number;
+    reason: string;
+  }>;
+  artifactPath?: string;
+}): { announcementId: string; htmlPath: string } {
+  const topCandidates = input.topCandidates.slice(0, 5);
+  return writeAnnouncement({
+    key: "apify-actor-discovery",
+    audience: "internal",
+    title: "Weekly Apify actor discovery scan",
+    summary: "The latest Apify store scan surfaced new actors that are relevant to local SEO, GBP operations, review monitoring, and lead generation.",
+    recipient: input.recipient,
+    cc: input.cc,
+    ctas: topCandidates.slice(0, 2).map((entry, index) => ({
+      label: index === 0 ? "Open top actor" : "Open runner-up",
+      url: entry.url
+    })),
+    metrics: [
+      { label: "Candidates", value: String(input.candidateCount), tone: "accent" },
+      { label: "Top scored", value: topCandidates[0] ? String(topCandidates[0].score) : "0", tone: "success" },
+      { label: "Focus", value: "GBP + local SEO", tone: "neutral" }
+    ],
+    sections: [
+      {
+        heading: "Why these made the cut",
+        body: topCandidates.length > 0
+          ? topCandidates.map((entry) => `${entry.title}: ${entry.reason} (score ${entry.score}).`).join(" ")
+          : "No strong new candidates were found in the latest discovery pass."
+      },
+      {
+        heading: "How to use this",
+        body: "Review the top candidates before adding them to production workers. Prefer actors with strong recent usage, credible review signals, and a pricing model that fits daily TRD automation volume."
+      }
+    ],
+    artifactPath: input.artifactPath
+  });
+}
+
 export function getQueuedAnnouncementPayload(announcementId: string): QueuedAnnouncementPayload | null {
   const queued = getQueuedAnnouncement(announcementId);
   if (!queued) return null;

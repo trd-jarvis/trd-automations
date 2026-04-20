@@ -24,6 +24,7 @@ import { uploadQueuedShareJobs } from "./lib/drive.js";
 import { listVapiAssistants, listVapiPhoneNumbers } from "./lib/vapi.js";
 import { exportVapiCreditSnapshot, getVapiCreditStatus } from "./lib/vapiCredits.js";
 import { ensureVapiPhonePool } from "./lib/vapiPhonePool.js";
+import { apifyPlatformUsageUrl, exportApifyActorDiscovery, exportApifyWorkerHealthDigest } from "./lib/apify.js";
 
 const program = new Command();
 program.name("trd-automations");
@@ -185,12 +186,15 @@ program
   .requiredOption("--worker <workerKey>", "Lead scrape worker key")
   .option("--limit <count>", "Maximum leads to stage", "200")
   .description("Stage Google Business Profile-style leads from a configured worker source.")
-  .action((options: { client: string; worker: string; limit: string }) => {
+  .action(async (options: { client: string; worker: string; limit: string }) => {
     initDb();
     const client = getClientAccount(options.client);
     const worker = getWorkerDefinition(options.worker);
-    const rows = filterLeadPool(client, loadLeadSource(worker));
-    const pool = expandLeadPool(rows, Number(options.limit), client);
+    const source = await loadLeadSource(client, worker, Number(options.limit));
+    const filtered = filterLeadPool(client, source.rows);
+    const pool = source.sourceType === "apify-actor"
+      ? filtered
+      : expandLeadPool(filtered, Number(options.limit), client);
     const leads = normalizeLeadRecords(client, worker, pool).slice(0, Number(options.limit));
     clearLeadPipeline(client.id);
     upsertLeads(leads);
@@ -201,7 +205,58 @@ program
       target: "Jose lead queue",
       policy: client.leadBatchPolicy ?? null,
       leadIds: leads.map((lead) => lead.id),
-      csvPath
+      csvPath,
+      actorRunId: source.actorRunId ?? null,
+      actorId: source.actorId ?? null,
+      defaultDatasetId: source.defaultDatasetId ?? null,
+      usageTotalUsd: source.usageTotalUsd ?? null
+    }, null, 2));
+  });
+
+program
+  .command("apify:healthcheck")
+  .option("--queue", "Queue an internal HTML announcement for Gmail delivery")
+  .option("--recipient <email>", "Primary digest recipient override")
+  .option("--cc <emails>", "Comma-separated CC list")
+  .description("Inspect configured Apify workers, recent actor health, and observed platform usage.")
+  .action(async (options: { queue?: boolean; recipient?: string; cc?: string }) => {
+    initDb();
+    const result = await exportApifyWorkerHealthDigest({
+      queueAnnouncement: Boolean(options.queue),
+      recipient: options.recipient,
+      cc: options.cc?.split(",").map((entry) => entry.trim()).filter(Boolean)
+    });
+    console.log(JSON.stringify({
+      ok: true,
+      exportPath: result.exportPath,
+      shareJobId: result.shareJobId,
+      announcementId: result.announcementId ?? null,
+      htmlPath: result.htmlPath ?? null,
+      consoleUrl: apifyPlatformUsageUrl(),
+      digest: result.digest
+    }, null, 2));
+  });
+
+program
+  .command("apify:discover")
+  .option("--queue", "Queue an internal HTML announcement for Gmail delivery")
+  .option("--recipient <email>", "Primary digest recipient override")
+  .option("--cc <emails>", "Comma-separated CC list")
+  .description("Scan the Apify store for new actors relevant to TRD local SEO, GBP, reviews, and lead generation.")
+  .action(async (options: { queue?: boolean; recipient?: string; cc?: string }) => {
+    initDb();
+    const result = await exportApifyActorDiscovery({
+      queueAnnouncement: Boolean(options.queue),
+      recipient: options.recipient,
+      cc: options.cc?.split(",").map((entry) => entry.trim()).filter(Boolean)
+    });
+    console.log(JSON.stringify({
+      ok: true,
+      exportPath: result.exportPath,
+      shareJobId: result.shareJobId,
+      announcementId: result.announcementId ?? null,
+      htmlPath: result.htmlPath ?? null,
+      result: result.result
     }, null, 2));
   });
 

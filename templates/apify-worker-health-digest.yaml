@@ -1,0 +1,9 @@
+name: apify-worker-health-digest
+description: Export Apify worker health and usage, then queue an internal HTML digest for Gmail.
+entry:
+  command: npm run apify:healthcheck -- --queue
+outputs:
+  - data/exports/*-apify-worker-health.json
+  - data/announcements/*-apify-worker-digest.html
+  - queued-share-job
+  - queued-announcement

@@ -1,0 +1,9 @@
+name: apify-actor-discovery
+description: Scan the Apify store for new TRD-relevant actors and queue an internal HTML digest.
+entry:
+  command: npm run apify:discover -- --queue
+outputs:
+  - data/exports/*-apify-actor-discovery.json
+  - data/announcements/*-apify-actor-discovery.html
+  - queued-share-job
+  - queued-announcement

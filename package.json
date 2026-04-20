@@ -19,6 +19,8 @@
     "announce:mark-sent": "tsx src/cli.ts announce:mark-sent",
     "contacts:audit": "tsx src/cli.ts contacts:audit",
     "lead:scrape": "tsx src/cli.ts lead:scrape",
+    "apify:healthcheck": "tsx src/cli.ts apify:healthcheck",
+    "apify:discover": "tsx src/cli.ts apify:discover",
     "lead:score": "tsx src/cli.ts lead:score",
     "lead:sync-ghl": "tsx src/cli.ts lead:sync-ghl",
     "outreach:email-prepare": "tsx src/cli.ts outreach:email-prepare",

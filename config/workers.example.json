@@ -91,25 +91,50 @@
     "label": "GBP Weakness Scan",
     "category": "lead-scrape",
     "source": {
-      "type": "sample-file",
-      "path": "config/fixtures/gbp-leads-sample.json"
+      "type": "apify-actor",
+      "actorId": "compass/crawler-google-places",
+      "inputTemplate": {
+        "searchStringsArray": [],
+        "maxCrawledPlacesPerSearch": 12,
+        "website": "withWebsite",
+        "includeWebResults": false,
+        "scrapeContacts": true,
+        "maximumLeadsEnrichmentRecords": 1,
+        "skipClosedPlaces": true,
+        "scrapeDirectories": false,
+        "scrapePlaceDetailPage": false,
+        "scrapeReviewsPersonalData": false,
+        "scrapeTableReservationProvider": false,
+        "searchMatching": "all",
+        "language": "en",
+        "maxReviews": 0,
+        "maxImages": 0,
+        "maxQuestions": 0,
+        "reviewsSort": "newest",
+        "reviewsOrigin": "all",
+        "reviewsFilterString": "",
+        "allPlacesNoSearchAction": "",
+        "proxyConfig": {
+          "useApifyProxy": true
+        }
+      }
     },
     "datasetFields": {
-      "title": "company",
-      "url": "website",
+      "title": "title",
+      "url": "url",
       "snippet": "weaknessHints",
-      "rank": "reviewCount",
-      "rating": "rating"
+      "rank": "rank",
+      "rating": "totalScore"
     },
     "leadFields": {
-      "company": "company",
+      "company": "title",
       "website": "website",
-      "phone": "phone",
-      "email": "email",
+      "phone": "phoneUnformatted",
+      "email": "primaryEmail",
       "city": "city",
       "state": "state",
-      "rating": "rating",
-      "reviewCount": "reviewCount",
+      "rating": "totalScore",
+      "reviewCount": "reviewsCount",
       "weaknessHints": "weaknessHints"
     },
     "positiveRules": {

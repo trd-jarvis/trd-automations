@@ -42,6 +42,9 @@ export interface ClientAccount {
   targetAreas?: string[];
   icp?: string;
   primaryOffer?: string;
+  leadSearchCategories?: string[];
+  leadSearchLocations?: string[];
+  leadSearchQueries?: string[];
   blitzClientId?: string;
   blitzClientName?: string;
   blitzUrl?: string;
@@ -110,6 +113,15 @@ export interface WorkerDefinition {
   leadFields?: LeadFieldMap;
   positiveRules: SignalRuleSet;
   negativeRules: SignalRuleSet;
+}
+
+export interface ActorRunMetadata {
+  actorId: string;
+  actorRunId: string;
+  defaultDatasetId?: string;
+  usageTotalUsd?: number | null;
+  tokenLabel?: string;
+  searchQueries?: string[];
 }
 
 export interface AnnouncementTemplate {
