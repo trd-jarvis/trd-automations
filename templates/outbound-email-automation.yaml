@@ -1,11 +1,11 @@
 name: outbound-email-automation
-description: Prepare polished HTML outbound emails and Gmail payloads from generated lead analysis.
+description: Send polished HTML outbound emails through gog from generated lead analysis.
 entry:
-  command: npm run outreach:email-prepare -- --client {{clientId}} --limit {{limit}}
+  command: npm run outreach:email-send -- --client {{clientId}} --limit {{limit}}
 defaults:
   clientId: trd-demo-client
   limit: 25
 outputs:
   - data/reports/*-outbound-email.html
-  - data/exports/*-email-prep.json
+  - data/exports/*-email-send.json
   - queued-share-job

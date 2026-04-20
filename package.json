@@ -24,6 +24,7 @@
     "lead:score": "tsx src/cli.ts lead:score",
     "lead:sync-ghl": "tsx src/cli.ts lead:sync-ghl",
     "outreach:email-prepare": "tsx src/cli.ts outreach:email-prepare",
+    "outreach:email-send": "tsx src/cli.ts outreach:email-send",
     "voice:batch": "tsx src/cli.ts voice:batch",
     "sms:followup": "tsx src/cli.ts sms:followup",
     "vapi:numbers": "tsx src/cli.ts vapi:numbers",

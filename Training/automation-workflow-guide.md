@@ -134,14 +134,16 @@ This is the main outbound acquisition engine. It creates the day’s working lea
 
 #### `drive-share-operator`
 
-- uploads/share-jobs the generated artifacts when Drive is configured
+- uploads/share-jobs the generated artifacts through `gog`
+- keeps the Desktop CSV local and also pushes it to Drive
+- shares lead artifacts with Jon as part of the team delivery path
 
 ### Main Command Sequence
 
 1. `npm run lead:scrape -- --client trd-outbound-prospects --worker gbp-weakness-scan --limit 200`
 2. `npm run lead:score -- --client trd-outbound-prospects`
 3. `npm run jose:queue -- --client trd-outbound-prospects`
-4. `npm run share:drive` when Drive is configured
+4. `npm run share:drive` to upload the queued CSV/export artifacts to Drive through `gog`
 
 ### Current Real Behavior
 
@@ -289,7 +291,7 @@ This automation runs client-facing positive monitoring. It identifies favorable 
 
 ### Purpose
 
-This automation turns generated leads into outbound email previews using negative AI/local visibility analysis. It does not send by default. It prepares polished HTML outreach assets and Gmail-ready payloads.
+This automation turns generated leads into outbound HTML emails using negative AI/local visibility analysis and sends them through `gog` before the voice batch window opens.
 
 ### Skill Used
 
@@ -298,13 +300,15 @@ This automation turns generated leads into outbound email previews using negativ
 ### What The Skill Does
 
 - analyzes weaknesses for each lead
-- produces HTML email previews
-- writes Gmail-ready payload JSON
+- produces the HTML outreach asset
+- sends the email through `gog`
+- writes a send/export JSON trail
+- sends an internal recap email to Jon with Bishop copied at the end of the run
 - keeps the tone direct with a light humorous touch
 
 ### Main Command
 
-- `npm run outreach:email-prepare -- --client trd-outbound-prospects --limit 25`
+- `npm run outreach:email-send -- --client trd-outbound-prospects --limit 200`
 
 ### Inputs
 
@@ -315,13 +319,13 @@ This automation turns generated leads into outbound email previews using negativ
 
 ### Outputs
 
-- HTML previews in `data/reports/`
-- export JSON in `data/exports/`
+- sent HTML artifacts in `data/reports/`
+- send/export JSON in `data/exports/`
 - queued share jobs
 
 ### Why It Matters
 
-Email is the first outreach-prep lane. It gives the team a polished, auditable first-touch asset tied to the lead’s actual weakness analysis.
+Email is the first outreach lane. It gets the message into the inbox before the call while preserving an auditable artifact tied to the lead’s actual weakness analysis.
 
 ## 3.6 TRD Blitz Readiness
 
@@ -758,4 +762,3 @@ If the phone pool is undersized or credits are unhealthy, the voice lane should 
 - Blitz readiness is upstream of trustworthy GBP execution.
 - Apify and Vapi digests are budget and health guardrails, not just informational extras.
 - Repo sync is part of the operating model because it preserves a change trail.
-

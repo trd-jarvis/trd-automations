@@ -15,6 +15,7 @@ import {
   prepareGeneratedLeadEmails,
   prepareVoiceBatch,
   scoreAndPlanLeads,
+  sendGeneratedLeadEmails,
   sendSmsFollowUps,
   syncGeneratedLeadsToGhl
 } from "./lib/outreach.js";
@@ -199,6 +200,11 @@ program
     clearLeadPipeline(client.id);
     upsertLeads(leads);
     const csvPath = exportLeadsCsv(client.id, worker.key, leads);
+    queueShareJob(
+      csvPath,
+      Array.from(new Set(["jon@truerankdigital.com", ...teamRecipients()])),
+      `Share lead CSV for ${client.name}.`
+    );
     console.log(JSON.stringify({
       ok: true,
       staged: leads.length,
@@ -309,6 +315,30 @@ program
     console.log(JSON.stringify({
       ok: true,
       prepared: result.prepared,
+      suppressed: result.suppressed,
+      exportPath: result.exportPath
+    }, null, 2));
+  });
+
+program
+  .command("outreach:email-send")
+  .requiredOption("--client <clientId>", "Client identifier")
+  .option("--limit <count>", "Maximum generated leads to send", "200")
+  .option("--to-override <email>", "Override recipient for testing without marking leads as sent")
+  .option("--account <email>", "gog account to send from", "jarvis@truerankdigital.com")
+  .option("--from <email>", "Optional verified send-as alias")
+  .description("Send outbound HTML emails for generated leads using gog.")
+  .action(async (options: { client: string; limit: string; toOverride?: string; account?: string; from?: string }) => {
+    initDb();
+    const result = await sendGeneratedLeadEmails(options.client, {
+      limit: Number(options.limit),
+      toOverride: options.toOverride,
+      account: options.account,
+      from: options.from
+    });
+    console.log(JSON.stringify({
+      ok: true,
+      sent: result.sent,
       suppressed: result.suppressed,
       exportPath: result.exportPath
     }, null, 2));

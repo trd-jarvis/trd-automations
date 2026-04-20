@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
@@ -61,23 +62,17 @@ function clip(value: string, max: number): string {
 }
 
 function buildSubject(lead: LeadRecord): string {
-  const market = [lead.city, lead.state].filter(Boolean).join(", ");
-  return clip(`${lead.company} is leaving AI search visibility on the table${market ? ` in ${market}` : ""}`, 86);
+  return clip(`AI Search Readiness for ${lead.company}`, 86);
 }
 
 function buildBody(lead: LeadRecord): string {
-  const summary = lead.negativeAnalysis?.summary ?? "We found a few authority and visibility gaps.";
-  const issueLine = lead.negativeAnalysis?.issues?.length
-    ? `Top gaps: ${lead.negativeAnalysis.issues.slice(0, 3).join("; ")}.`
-    : `Top gaps: ${lead.weaknessSignals.join(", ") || "review depth, AI visibility, and authority signals"}.`;
   return [
-    `Hi,`,
+    `Hey ${lead.company} team,`,
     ``,
-    `I took a look at ${lead.company} and noticed a few easy-to-miss issues that are making AI search and local visibility work harder than they should.`,
-    summary,
-    issueLine,
-    `Not trying to write you a dramatic breakup letter from Google, but there is real cleanup opportunity here.`,
-    `If you want, I can send over the short version and show you what we would fix first.`,
+    `I wanted to send this over before I call so you have quick context.`,
+    `Traditional search is evolving fast. If your business is not optimized to be cited by AI engines and smart assistants, you miss a growing share of ready-to-buy local demand.`,
+    `True Rank Digital focuses on AI search readiness so when customers ask AI for the best local option, your business has a better chance to be the answer.`,
+    `If you want the quick version first, grab 10 minutes here: ${resolvedBookingUrl() ?? "booking link pending"}`,
     ``,
     `Jarvis`,
     `True Rank Digital`
@@ -157,48 +152,147 @@ async function analyzeLead(client: ClientAccount, lead: LeadRecord): Promise<Lea
 
 function emailHtml(client: ClientAccount, lead: LeadRecord): string {
   const bookingUrl = resolvedBookingUrl();
-  const summary = escapeHtml(lead.negativeAnalysis?.summary ?? "We found authority and visibility gaps worth fixing.");
-  const issues = (lead.negativeAnalysis?.issues ?? lead.weaknessSignals).slice(0, 4);
-  const buttons = [
-    bookingUrl ? `<a href="${bookingUrl}" style="display:inline-block;padding:12px 18px;border-radius:999px;background:#0d5c63;color:#ffffff;text-decoration:none;font-weight:600;">Book A Quick Walkthrough</a>` : "",
-    lead.website ? `<a href="${lead.website}" style="display:inline-block;padding:12px 18px;border-radius:999px;background:#eff6f3;color:#0f172a;text-decoration:none;font-weight:600;">View Your Site</a>` : ""
-  ].filter(Boolean).join("&nbsp;");
-
+  const greeting = escapeHtml(`${lead.company} team`);
+  const bookingUrlEscaped = bookingUrl ? escapeHtml(bookingUrl) : "booking link pending";
   return `<!doctype html>
 <html lang="en">
-  <body style="margin:0;background:#f4f0e8;font-family:Arial,sans-serif;color:#0f172a;">
-    <div style="max-width:720px;margin:0 auto;padding:32px 20px;">
-      <div style="background:linear-gradient(135deg,#fff9f2,#edf7f4);border:1px solid #d9e6df;border-radius:28px;padding:32px;">
-        <div style="font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:#0d5c63;font-weight:700;">True Rank Digital</div>
-        <h1 style="margin:14px 0 8px;font-size:34px;line-height:1.05;">${escapeHtml(lead.company)} has a few AI visibility leaks.</h1>
-        <p style="margin:0 0 20px;font-size:16px;line-height:1.6;color:#334155;">${summary}</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
-          <div style="flex:1;min-width:180px;background:#ffffff;border-radius:18px;padding:18px;border:1px solid #e2e8f0;">
-            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#64748b;">Severity</div>
-            <div style="font-size:30px;font-weight:700;margin-top:8px;">${lead.negativeAnalysis?.severityScore ?? lead.weaknessScore}</div>
-          </div>
-          <div style="flex:1;min-width:180px;background:#ffffff;border-radius:18px;padding:18px;border:1px solid #e2e8f0;">
-            <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.12em;color:#64748b;">Market</div>
-            <div style="font-size:18px;font-weight:700;margin-top:10px;">${escapeHtml([lead.city, lead.state].filter(Boolean).join(", ") || "Local Search")}</div>
-          </div>
-        </div>
-        <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:22px;padding:22px;margin-bottom:24px;">
-          <div style="font-size:13px;text-transform:uppercase;letter-spacing:0.12em;color:#64748b;margin-bottom:12px;">What stood out</div>
-          <ul style="padding-left:20px;margin:0;">
-            ${issues.map((issue) => `<li style="margin:0 0 10px;line-height:1.5;">${escapeHtml(issue)}</li>`).join("")}
-          </ul>
-        </div>
-        <p style="margin:0 0 18px;font-size:16px;line-height:1.7;color:#334155;">
-          Short version: there is fixable demand slipping through the cracks here. The dramatic part is only what Google is doing, not this email.
-        </p>
-        <div>${buttons}</div>
-        <p style="margin:26px 0 0;font-size:14px;line-height:1.6;color:#475569;">
-          Jarvis<br/>True Rank Digital
-        </p>
-      </div>
-    </div>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Touch 1 - Warm Intro</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+  <div style="text-align:center;padding:24px 0 8px;">
+    <img src="https://lh3.googleusercontent.com/p/AF1QipMXo3XQgG0YvEAEXvebt5fvZ8vIm-2G5DGgea0Y=s680-w680-h510-rw" alt="True Rank Digital" style="display:block;margin:0 auto;max-width:180px;width:180px;height:auto;" />
+  </div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f5f7fb;padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:600px;max-width:600px;background:#ffffff;border:1px solid #e5e7eb;border-radius:16px;overflow:hidden;">
+          <tr>
+            <td style="padding:24px 28px 14px;background:#0f766e;color:#ffffff;">
+              <div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;opacity:0.8;">True Rank Digital</div>
+              <div style="font-size:24px;line-height:1.2;font-weight:700;margin-top:10px;">AI Search Readiness</div>
+              <div style="font-size:14px;line-height:1.6;opacity:0.92;margin-top:8px;">Making sure you show up when customers ask AI.</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px;">
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">Hey ${greeting},</p>
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">I wanted to send this over before I call so you have quick context. I’ll keep it brief.</p>
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">As search keeps shifting, businesses that are not optimized to be cited by AI engines and smart assistants are getting left out of a growing wave of ready-to-buy local demand.</p>
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.7;">At True Rank Digital, we go beyond outdated SEO. We build your digital authority so that when people ask AI for the best local services, <strong>your business has a better chance to be the answer.</strong></p>
+              <p style="margin:0 0 22px;font-size:16px;line-height:1.7;">If you want the quick assessment before we connect, grab 10 minutes on my calendar here:</p>
+              <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 18px;">
+                <tr>
+                  <td style="border-radius:999px;background:#0f766e;">
+                    <a href="${bookingUrlEscaped}" style="display:inline-block;padding:14px 22px;font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:999px;">Book with Jarvis</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0 0 10px;font-size:14px;line-height:1.7;color:#4b5563;">Booking page:</p>
+              <p style="margin:0 0 20px;font-size:14px;line-height:1.7;"><a href="${bookingUrlEscaped}" style="color:#0f766e;text-decoration:underline;">${bookingUrlEscaped}</a></p>
+              <div style="font-size:14px;line-height:1.7;color:#111827;">
+                <strong>Jarvis</strong><br />
+                True Rank Digital<br />
+                908-416-3008
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
 </html>`;
+}
+
+interface PreparedLeadEmail {
+  analyzed: LeadRecord;
+  subject: string;
+  body: string;
+  html: string;
+  htmlPath: string;
+  payloadPath: string;
+  preparedAt: string;
+}
+
+interface GogSendResult {
+  messageId: string | null;
+  raw: Record<string, unknown> | null;
+}
+
+function extractMessageId(value: unknown): string | null {
+  if (!value || typeof value !== "object") return null;
+  const record = value as Record<string, unknown>;
+  const direct = [record.messageId, record.gmailMessageId, record.id]
+    .find((candidate) => typeof candidate === "string" && candidate.trim());
+  if (typeof direct === "string") return direct;
+  for (const nested of Object.values(record)) {
+    const candidate = extractMessageId(nested);
+    if (candidate) return candidate;
+  }
+  return null;
+}
+
+function sendLeadEmailViaGog(input: {
+  recipient: string;
+  subject: string;
+  body: string;
+  html: string;
+  account?: string;
+  from?: string;
+}): GogSendResult {
+  const args = [
+    "send",
+    "--json",
+    "--no-input",
+    `--to=${input.recipient}`,
+    `--subject=${input.subject}`,
+    `--body=${input.body}`,
+    `--body-html=${input.html}`
+  ];
+  if (input.account) args.push(`--account=${input.account}`);
+  if (input.from) args.push(`--from=${input.from}`);
+  const raw = execFileSync("gog", args, {
+    encoding: "utf8",
+    maxBuffer: 10 * 1024 * 1024
+  }).trim();
+  const parsed = raw ? JSON.parse(raw) as Record<string, unknown> : null;
+  return {
+    messageId: extractMessageId(parsed),
+    raw: parsed
+  };
+}
+
+async function prepareLeadEmail(client: ClientAccount, lead: LeadRecord): Promise<PreparedLeadEmail | null> {
+  const analyzed = await analyzeLead(client, lead);
+  if (!analyzed.email) return null;
+  const preparedAt = new Date().toISOString();
+  const htmlPath = path.join(REPORT_DIR, `${preparedAt.replaceAll(":", "-")}-${analyzed.id}-outbound-email.html`);
+  const payloadPath = path.join(EXPORT_DIR, `${analyzed.id}-email-payload.json`);
+  const subject = buildSubject(analyzed);
+  const body = buildBody(analyzed);
+  const html = emailHtml(client, analyzed);
+  writeFileSync(htmlPath, html, "utf8");
+  writeJson(payloadPath, {
+    to: analyzed.email,
+    cc: [],
+    subject,
+    htmlPath,
+    preparedAt
+  });
+  queueShareJob(htmlPath, teamRecipients(), `Share outbound email HTML for ${analyzed.company}.`);
+  queueShareJob(payloadPath, teamRecipients(), `Share outbound email payload for ${analyzed.company}.`);
+  return {
+    analyzed,
+    subject,
+    body,
+    html,
+    htmlPath,
+    payloadPath,
+    preparedAt
+  };
 }
 
 function buildVoiceSystemPrompt(client: ClientAccount, lead: LeadRecord): string {
@@ -332,34 +426,20 @@ export async function prepareGeneratedLeadEmails(
   let suppressed = 0;
 
   for (const lead of leads) {
-    const analyzed = await analyzeLead(client, lead);
-    if (!analyzed.email) {
+    const preparedEmail = await prepareLeadEmail(client, lead);
+    if (!preparedEmail) {
+      const analyzed = await analyzeLead(client, lead);
       updated.push(analyzed);
       suppressed += 1;
       continue;
     }
-    const htmlPath = path.join(REPORT_DIR, `${new Date().toISOString().replaceAll(":", "-")}-${analyzed.id}-outbound-email.html`);
-    const payloadPath = path.join(EXPORT_DIR, `${analyzed.id}-email-payload.json`);
-    const subject = buildSubject(analyzed);
-    const body = buildBody(analyzed);
-    writeJson(payloadPath, {
-      to: analyzed.email,
-      cc: [],
-      subject,
-      htmlPath,
-      preparedAt: new Date().toISOString()
-    });
-    const html = emailHtml(client, analyzed);
-    writeFileSync(htmlPath, html, "utf8");
-    queueShareJob(htmlPath, teamRecipients(), `Share outbound email HTML for ${analyzed.company}.`);
-    queueShareJob(payloadPath, teamRecipients(), `Share outbound email payload for ${analyzed.company}.`);
     updated.push(stageLead({
-      ...analyzed,
-      emailSubject: subject,
-      emailBody: body,
-      emailHtmlPath: htmlPath,
-      emailPayloadPath: payloadPath,
-      emailPreparedAt: new Date().toISOString()
+      ...preparedEmail.analyzed,
+      emailSubject: preparedEmail.subject,
+      emailBody: preparedEmail.body,
+      emailHtmlPath: preparedEmail.htmlPath,
+      emailPayloadPath: preparedEmail.payloadPath,
+      emailPreparedAt: preparedEmail.preparedAt
     }, "EMAIL_READY"));
     prepared += 1;
   }
@@ -384,6 +464,90 @@ export async function prepareGeneratedLeadEmails(
   return { prepared, suppressed, exportPath, leads: updated };
 }
 
+export async function sendGeneratedLeadEmails(
+  clientId: string,
+  options: {
+    limit?: number;
+    account?: string;
+    from?: string;
+    toOverride?: string;
+  } = {}
+): Promise<{ sent: number; suppressed: number; exportPath: string; leads: LeadRecord[] }> {
+  const client = getClientAccount(clientId);
+  const limit = Math.max(1, options.limit ?? 200);
+  const leads = getLeads(clientId)
+    .filter((lead) => lead.leadSource === "generated" && Boolean(lead.email) && !lead.emailSentAt)
+    .sort((left, right) => right.qualificationScore - left.qualificationScore || right.weaknessScore - left.weaknessScore)
+    .slice(0, limit);
+
+  const updated: LeadRecord[] = [];
+  const exportRows: Array<Record<string, unknown>> = [];
+  let sent = 0;
+  let suppressed = 0;
+
+  for (const lead of leads) {
+    const preparedEmail = await prepareLeadEmail(client, lead);
+    if (!preparedEmail?.analyzed.email) {
+      suppressed += 1;
+      continue;
+    }
+
+    const recipient = options.toOverride ?? preparedEmail.analyzed.email;
+    const sentAt = new Date().toISOString();
+    const result = sendLeadEmailViaGog({
+      recipient,
+      subject: preparedEmail.subject,
+      body: preparedEmail.body,
+      html: preparedEmail.html,
+      account: options.account,
+      from: options.from
+    });
+
+    exportRows.push({
+      leadId: preparedEmail.analyzed.id,
+      company: preparedEmail.analyzed.company,
+      originalRecipient: preparedEmail.analyzed.email,
+      deliveredTo: recipient,
+      subject: preparedEmail.subject,
+      htmlPath: preparedEmail.htmlPath,
+      payloadPath: preparedEmail.payloadPath,
+      messageId: result.messageId,
+      sentAt
+    });
+
+    if (!options.toOverride) {
+      updated.push(stageLead({
+        ...preparedEmail.analyzed,
+        emailSubject: preparedEmail.subject,
+        emailBody: preparedEmail.body,
+        emailHtmlPath: preparedEmail.htmlPath,
+        emailPayloadPath: preparedEmail.payloadPath,
+        emailPreparedAt: preparedEmail.preparedAt,
+        emailSentAt: sentAt,
+        emailMessageId: result.messageId
+      }, "EMAIL_READY"));
+    }
+
+    sent += 1;
+  }
+
+  if (updated.length > 0) {
+    upsertLeads(updated);
+  }
+
+  const exportPath = path.join(EXPORT_DIR, `${new Date().toISOString().replaceAll(":", "-")}-${clientId}-email-send.json`);
+  writeJson(exportPath, {
+    generatedAt: new Date().toISOString(),
+    clientId,
+    sent,
+    suppressed,
+    overrideRecipient: options.toOverride ?? null,
+    leads: exportRows
+  });
+  queueShareJob(exportPath, teamRecipients(), `Share outbound email send summary for ${client.name}.`);
+  return { sent, suppressed, exportPath, leads: updated };
+}
+
 export async function prepareVoiceBatch(
   clientId: string,
   batchSize = 10,
@@ -391,7 +555,12 @@ export async function prepareVoiceBatch(
 ): Promise<{ batchId: string; selected: number; numbersUsed: number; exportPath: string; leads: LeadRecord[] }> {
   const client = getClientAccount(clientId);
   const nextLeads = getLeads(clientId)
-    .filter((lead) => lead.leadSource === "generated" && Boolean(lead.phone) && lead.voiceStatus !== "QUEUED")
+    .filter((lead) => (
+      lead.leadSource === "generated"
+      && Boolean(lead.phone)
+      && lead.voiceStatus !== "QUEUED"
+      && (!lead.email || Boolean(lead.emailSentAt))
+    ))
     .sort((left, right) => right.qualificationScore - left.qualificationScore || right.weaknessScore - left.weaknessScore)
     .slice(0, Math.min(10, Math.max(1, batchSize)));
 

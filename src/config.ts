@@ -51,6 +51,8 @@ const envSchema = z.object({
   GOOGLE_SERVICE_ACCOUNT_JSON_PATH: z.string().optional(),
   GOOGLE_SERVICE_ACCOUNT_JSON: z.string().optional(),
   GOOGLE_DRIVE_FOLDER_ID: z.string().optional(),
+  GOG_ACCOUNT: z.string().optional(),
+  GOG_DRIVE_FOLDER_ID: z.string().optional(),
   GOOGLE_AUTOMATIONS_ENV_PATH: z.string().optional(),
   BLITZ_BASE_URL: z.string().optional(),
   SUPABASE_URL: z.string().optional(),
@@ -60,7 +62,14 @@ const envSchema = z.object({
   SCHEDULED_CONTENT_DISPATCHER_ENABLED: z.string().optional()
 });
 
-export const env = envSchema.parse(process.env);
+const parsedEnv = envSchema.parse(process.env);
+
+export const env = {
+  ...parsedEnv,
+  GHL_BASE_URL: parsedEnv.GHL_BASE_URL.trim().replace(/[\\/]+$/, ""),
+  GHL_API_VERSION: parsedEnv.GHL_API_VERSION.trim().replace(/[\\]+$/, ""),
+  VAPI_BASE_URL: parsedEnv.VAPI_BASE_URL.trim().replace(/[\\/]+$/, "")
+};
 
 const signalRuleSchema = z.object({
   requiredKeywords: z.array(z.string()),
@@ -267,6 +276,10 @@ export function resolvedBookingUrl(): string | undefined {
     return env.BOOKING_URL_CALENDLY;
   }
   return env.BOOKING_URL ?? env.BOOKING_URL_CALENDLY ?? env.BOOKING_URL_GOOGLE_CALENDAR ?? undefined;
+}
+
+export function gogAccount(): string {
+  return env.GOG_ACCOUNT?.trim() || "jarvis@truerankdigital.com";
 }
 
 export function resolveDefaultBlitzUrl(clientId: string): string | undefined {

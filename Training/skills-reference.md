@@ -153,6 +153,8 @@ Flushes queued share jobs to Google Drive.
 
 - queued is not the same as delivered
 - keep uploads idempotent
+- the local Desktop/export artifact remains the source file
+- for lead artifacts, make sure Jon is included in sharing
 
 ### Used By
 
@@ -168,7 +170,7 @@ Builds outbound email previews from generated leads.
 
 ### Command
 
-- `npm run outreach:email-prepare -- --client <clientId> --limit 25`
+- `npm run outreach:email-send -- --client <clientId> --limit 200`
 
 ### What It Produces
 
@@ -505,4 +507,3 @@ They are useful when a human or Codex needs a more manual, contextual workflow o
 | `apify-worker-health-digest` | keeps scraping transparent and budget-aware |
 | `apify-actor-discovery` | keeps tooling research alive |
 | `repo-sync-publisher` | preserves change history |
-
