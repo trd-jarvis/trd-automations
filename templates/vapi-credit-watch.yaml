@@ -1,0 +1,7 @@
+name: vapi-credit-watch
+description: Inspect Vapi credits, estimate runway, and export a shareable snapshot.
+entry:
+  command: npm run vapi:credits -- --export
+outputs:
+  - data/exports/*-vapi-credit-snapshot.json
+  - queued-share-job

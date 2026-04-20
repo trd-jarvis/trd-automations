@@ -1,0 +1,10 @@
+name: vapi-phone-pool-manager
+description: Ensure the Vapi phone-number pool reaches the desired rotation size.
+entry:
+  command: npm run vapi:numbers:ensure -- --count {{count}} --area-codes {{areaCodes}}
+defaults:
+  count: 10
+  areaCodes: 651,540,774
+outputs:
+  - data/exports/*-vapi-phone-pool.json
+  - queued-share-job

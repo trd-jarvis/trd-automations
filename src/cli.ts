@@ -9,6 +9,7 @@ import { publishLogs } from "./lib/logs.js";
 import { queueClientReport, getQueuedReportPayload } from "./lib/reports.js";
 import { splitSignals } from "./lib/scoring.js";
 import { executeWorker, expandLeadPool, filterLeadPool, loadLeadSource, normalizeLeadRecords } from "./lib/workers.js";
+import { exportLeadsCsv } from "./lib/leadsExport.js";
 import {
   packageJoseQueue,
   prepareGeneratedLeadEmails,
@@ -21,6 +22,8 @@ import { getQueuedAnnouncementPayload, markAnnouncementSent, queueClientContactC
 import { auditBlitzReadiness, planBlitzPostQueue } from "./lib/blitz.js";
 import { uploadQueuedShareJobs } from "./lib/drive.js";
 import { listVapiAssistants, listVapiPhoneNumbers } from "./lib/vapi.js";
+import { exportVapiCreditSnapshot, getVapiCreditStatus } from "./lib/vapiCredits.js";
+import { ensureVapiPhonePool } from "./lib/vapiPhonePool.js";
 
 const program = new Command();
 program.name("trd-automations");
@@ -191,12 +194,14 @@ program
     const leads = normalizeLeadRecords(client, worker, pool).slice(0, Number(options.limit));
     clearLeadPipeline(client.id);
     upsertLeads(leads);
+    const csvPath = exportLeadsCsv(client.id, worker.key, leads);
     console.log(JSON.stringify({
       ok: true,
       staged: leads.length,
       target: "Jose lead queue",
       policy: client.leadBatchPolicy ?? null,
-      leadIds: leads.map((lead) => lead.id)
+      leadIds: leads.map((lead) => lead.id),
+      csvPath
     }, null, 2));
   });
 
@@ -303,6 +308,28 @@ program
   });
 
 program
+  .command("vapi:numbers:ensure")
+  .option("--count <count>", "Desired pool size", "10")
+  .option("--area-codes <codes>", "Comma-separated area codes to cycle during creation")
+  .description("Create free Vapi phone numbers until the outbound pool reaches the desired size.")
+  .action(async (options: { count: string; areaCodes?: string }) => {
+    initDb();
+    const result = await ensureVapiPhonePool({
+      targetCount: Number(options.count),
+      areaCodes: options.areaCodes?.split(",").map((entry) => entry.trim()).filter(Boolean),
+      createDefaultAssistant: true
+    });
+    console.log(JSON.stringify({
+      ok: true,
+      targetCount: result.targetCount,
+      existingCount: result.existingCount,
+      createdCount: result.createdCount,
+      totalCount: result.phoneNumbers.length,
+      exportPath: result.exportPath
+    }, null, 2));
+  });
+
+program
   .command("vapi:assistants")
   .description("List Vapi assistants available to the outbound automation stack.")
   .action(async () => {
@@ -310,6 +337,28 @@ program
     console.log(JSON.stringify({
       ok: true,
       assistants: await listVapiAssistants()
+    }, null, 2));
+  });
+
+program
+  .command("vapi:credits")
+  .option("--export", "Write and queue a shareable snapshot")
+  .description("Inspect Vapi credits and estimate call runway from recent cost history.")
+  .action(async (options: { export?: boolean }) => {
+    initDb();
+    if (options.export) {
+      const result = await exportVapiCreditSnapshot();
+      console.log(JSON.stringify({
+        ok: true,
+        exportPath: result.exportPath,
+        shareJobId: result.shareJobId,
+        snapshot: result.snapshot
+      }, null, 2));
+      return;
+    }
+    console.log(JSON.stringify({
+      ok: true,
+      snapshot: await getVapiCreditStatus()
     }, null, 2));
   });
 
