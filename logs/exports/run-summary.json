@@ -1,6 +1,54 @@
 {
-  "generatedAt": "2026-04-20T11:46:52.487Z",
+  "generatedAt": "2026-04-20T12:47:28.993Z",
   "runs": [
+    {
+      "runId": "d8eb16ef-a190-4178-ace8-8a8b36f8388d",
+      "clientId": "trd-outbound-prospects",
+      "workerKey": "gbp-weakness-scan",
+      "status": "SUCCESS",
+      "sourceType": "apify-actor",
+      "itemCount": 0,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T12-01-32.734Z-trd-outbound-prospects-gbp-weakness-scan.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "7128ca1b-0b6e-43fe-af64-ffb04a25cb81",
+      "clientId": "trd-demo-client",
+      "workerKey": "site-entity-audit",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T12-00-43.623Z-trd-demo-client-site-entity-audit.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "876cafc4-07b6-4ee1-b072-8f45cacf7037",
+      "clientId": "trd-demo-client",
+      "workerKey": "brand-mention-discovery",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T12-00-43.622Z-trd-demo-client-brand-mention-discovery.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "6f76ccd6-30a1-4d0b-ab11-7eefd32ec6f9",
+      "clientId": "trd-demo-client",
+      "workerKey": "ai-overview-citations",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T12-00-43.620Z-trd-demo-client-ai-overview-citations.json",
+      "errorMessage": null
+    },
     {
       "runId": "21fba204-83e8-459d-935e-9507ff11e977",
       "clientId": "trd-demo-client",
