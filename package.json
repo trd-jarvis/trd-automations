@@ -1,0 +1,49 @@
+{
+  "name": "trd-automations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "True Rank Digital automation stack for Codex with local skills, workflow templates, approvals, reporting, and provider-aware runtime helpers.",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "check": "tsc --noEmit",
+    "bootstrap": "tsx src/cli.ts bootstrap",
+    "health:check": "tsx src/cli.ts health:check",
+    "worker:run": "tsx src/cli.ts worker:run",
+    "signal:split": "tsx src/cli.ts signal:split",
+    "report:queue": "tsx src/cli.ts report:queue",
+    "report:payload": "tsx src/cli.ts report:payload",
+    "report:mark-sent": "tsx src/cli.ts report:mark-sent",
+    "announce:queue": "tsx src/cli.ts announce:queue",
+    "announce:payload": "tsx src/cli.ts announce:payload",
+    "announce:mark-sent": "tsx src/cli.ts announce:mark-sent",
+    "contacts:audit": "tsx src/cli.ts contacts:audit",
+    "lead:scrape": "tsx src/cli.ts lead:scrape",
+    "lead:score": "tsx src/cli.ts lead:score",
+    "jose:queue": "tsx src/cli.ts jose:queue",
+    "blitz:readiness": "tsx src/cli.ts blitz:readiness",
+    "blitz:post-plan": "tsx src/cli.ts blitz:post-plan",
+    "share:drive": "tsx src/cli.ts share:drive",
+    "approval:list": "tsx src/cli.ts approval:list",
+    "approval:grant": "tsx src/cli.ts approval:grant",
+    "dispatch:run": "tsx src/cli.ts dispatch:run",
+    "log:publish": "tsx src/cli.ts log:publish"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.3",
+    "apify-client": "^2.13.0",
+    "commander": "^14.0.1",
+    "dotenv": "^17.2.3",
+    "googleapis": "^171.4.0",
+    "yaml": "^2.8.1",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

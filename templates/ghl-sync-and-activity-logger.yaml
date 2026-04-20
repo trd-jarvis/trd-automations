@@ -1,0 +1,12 @@
+name: ghl-sync-and-activity-logger
+version: 1
+goal: Persist CRM activity, notes, and tags without creating a separate CRM sync system.
+skill: ghl-sync-and-activity-logger
+steps:
+  - command: npm run dispatch:run -- --plan-id {{planId}} --mode preview
+outputs:
+  - crm_activity_log
+  - dispatch_preview
+guardrails:
+  - Keep CRM writes idempotent.
+  - Respect approval gating before any live outbound attempt.

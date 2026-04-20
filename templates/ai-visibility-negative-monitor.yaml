@@ -1,0 +1,13 @@
+name: ai-visibility-negative-monitor
+version: 1
+goal: Collect the same AI visibility findings but isolate neutral and negative items for optimization work.
+skill: ai-visibility-negative-monitor
+steps:
+  - command: npm run worker:run -- --client {{clientId}}
+  - command: npm run signal:split -- --client {{clientId}}
+outputs:
+  - negative_signal_queue
+  - optimization_backlog
+guardrails:
+  - Never route negative findings into the client-facing positive report.
+  - Keep the output internal-only until an operator chooses to relay it.

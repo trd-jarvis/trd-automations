@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+data/*.sqlite
+data/raw/
+data/reports/
+data/exports/
+*.log
+.DS_Store

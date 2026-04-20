@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-04-20T02:28:50.749Z",
+  "runs": [
+    {
+      "runId": "e1d0b0a4-e614-413c-b026-e27160e46556",
+      "clientId": "trd-demo-client",
+      "workerKey": "site-entity-audit",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T02-27-28.985Z-trd-demo-client-site-entity-audit.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "9867d884-eb06-403f-9b49-75c603fc9da8",
+      "clientId": "trd-demo-client",
+      "workerKey": "brand-mention-discovery",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T02-27-28.984Z-trd-demo-client-brand-mention-discovery.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "b0f5542a-5778-4e74-8d0a-246a6d237ca9",
+      "clientId": "trd-demo-client",
+      "workerKey": "ai-overview-citations",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-20T02-27-28.983Z-trd-demo-client-ai-overview-citations.json",
+      "errorMessage": null
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+name: blitz-gbp-ops
+version: 1
+goal: Operate GBP posts and review automation through the cloned Blitz platform instead of ad hoc scripts.
+skill: blitz-gbp-operator
+repoPath: /Users/jarvis/Documents/TRD-AUTOMATIONS/trd-blitzai
+envReference: /Users/jarvis/Documents/TRD-VOICE/env/googleautomations.env
+surfaces:
+  - post_tool
+  - review_ignition
+  - scheduled_dispatcher
+  - client_seeding
+steps:
+  - inspect control plane API or dashboard surface for the target client
+  - verify Supabase-backed client assets and orchestration settings
+  - queue or update content artifacts
+  - allow scheduled dispatcher or explicit operator action to publish
+guardrails:
+  - do not hardcode secrets into repo files
+  - do not bypass the platform approval queue for risky GBP mutations
+  - use the platform artifact and action queues as the source of truth

@@ -1,0 +1,13 @@
+name: approval-gated-outreach-planner
+version: 1
+goal: Turn scored leads into channel recommendations, outbound drafts, and approval records.
+skill: approval-gated-outreach-planner
+steps:
+  - command: npm run lead:score -- --client {{clientId}}
+  - command: npm run approval:list -- --status PENDING
+outputs:
+  - approval_items
+  - dispatch_plan_previews
+guardrails:
+  - No outbound email, SMS, or voice call before approval.
+  - Default to voice for strong phone-qualified leads and email otherwise.

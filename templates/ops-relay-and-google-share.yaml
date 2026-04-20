@@ -1,0 +1,12 @@
+name: ops-relay-and-google-share
+version: 1
+goal: Export evidence, prepare Slack or Gmail relays, and queue team share actions for every generated artifact.
+skill: ops-relay-and-google-share
+steps:
+  - command: npm run log:publish
+outputs:
+  - exported_run_summary
+  - share_job
+guardrails:
+  - Slack destinations remain placeholders until real channel IDs are configured.
+  - Generated artifacts should be queued for sharing with the full TRD team.

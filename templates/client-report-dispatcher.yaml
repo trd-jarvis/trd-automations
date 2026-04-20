@@ -1,0 +1,15 @@
+name: client-report-dispatcher
+version: 1
+goal: Queue a branded HTML report, expose the Gmail-ready payload, and mark it sent only after Gmail succeeds.
+skill: client-report-dispatcher
+steps:
+  - command: npm run report:queue -- --client {{clientId}}
+  - command: npm run report:payload -- --client {{clientId}}
+  - connector: gmail
+  - command: npm run report:mark-sent -- --client {{clientId}} --report-id {{reportId}} --message-id {{messageId}}
+outputs:
+  - gmail_payload
+  - queued_html_report
+guardrails:
+  - No-op when no positive findings are queued.
+  - Use the Gmail connector, not SMTP.

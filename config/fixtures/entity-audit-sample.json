@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Homepage authority scan",
+    "url": "https://demohvac.example.com/",
+    "snippet": "The homepage includes review schema, service area references, and clear trust indicators.",
+    "publishedAt": "2026-04-18T15:00:00Z",
+    "rank": 1,
+    "rating": 4.6
+  },
+  {
+    "title": "Service page entity gaps",
+    "url": "https://demohvac.example.com/ac-repair",
+    "snippet": "Missing FAQ schema and incomplete location signals reduce authority on a key service page.",
+    "publishedAt": "2026-04-18T15:05:00Z",
+    "rank": 6,
+    "rating": 3.7
+  }
+]

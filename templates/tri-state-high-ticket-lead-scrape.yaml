@@ -1,0 +1,11 @@
+name: tri-state-high-ticket-lead-scrape
+version: 1
+goal: Stage 200 tri-state, high-ticket, service-business leads for Jose.
+skill: gbp-lead-scraper
+steps:
+  - command: npm run lead:scrape -- --client {{clientId}} --worker gbp-weakness-scan --limit 200
+outputs:
+  - staged_leads
+guardrails:
+  - Stay tri-state only.
+  - Keep the batch focused on service businesses and high-ticket ICPs.

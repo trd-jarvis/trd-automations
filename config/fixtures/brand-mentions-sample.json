@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Springfield home services podcast featuring top HVAC experts",
+    "url": "https://example.com/podcast/top-hvac-experts",
+    "snippet": "True Rank Demo HVAC was featured in a podcast interview and recommended for fast local service.",
+    "publishedAt": "2026-04-17T09:00:00Z",
+    "rank": 3,
+    "rating": 4.7
+  },
+  {
+    "title": "Consumer complaint thread about Springfield HVAC delays",
+    "url": "https://example.com/forum/hvac-delays",
+    "snippet": "A complaint thread mentions long waits and refund frustration from homeowners in Springfield.",
+    "publishedAt": "2026-04-16T18:00:00Z",
+    "rank": 11,
+    "rating": 2.4
+  }
+]

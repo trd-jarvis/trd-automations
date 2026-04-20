@@ -1,0 +1,13 @@
+name: repo-sync-publisher
+version: 1
+goal: Export the latest automation run summary, commit repo changes, and push them to the configured Git remote.
+skill: repo-sync-publisher
+steps:
+  - command: npm run log:publish
+outputs:
+  - exported_run_summary
+  - git_commit
+  - git_push_status
+guardrails:
+  - Keep local env files ignored.
+  - Report push failures explicitly.

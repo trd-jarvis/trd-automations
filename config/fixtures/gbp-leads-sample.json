@@ -1,0 +1,41 @@
+[
+  {
+    "company": "Hudson Elite Roofing",
+    "website": "https://hudsoneliteroofing.example.com",
+    "phone": "+19145550101",
+    "email": "owner@hudsoneliteroofing.example.com",
+    "city": "White Plains",
+    "state": "NY",
+    "businessType": "service",
+    "marketTier": "high-ticket",
+    "rating": 3.9,
+    "reviewCount": 14,
+    "weaknessHints": "few reviews|missing schema|no faq|weak service pages"
+  },
+  {
+    "company": "Garden State Luxury Plumbing",
+    "website": "https://gardenstateluxuryplumbing.example.com",
+    "phone": "+12015550102",
+    "email": "office@gardenstateluxuryplumbing.example.com",
+    "city": "Paramus",
+    "state": "NJ",
+    "businessType": "service",
+    "marketTier": "high-ticket",
+    "rating": 4.1,
+    "reviewCount": 21,
+    "weaknessHints": "slow site|thin content|weak local citations"
+  },
+  {
+    "company": "Fairfield Premier Remodel",
+    "website": "https://fairfieldpremierremodel.example.com",
+    "phone": "+12035550103",
+    "email": "hello@fairfieldpremierremodel.example.com",
+    "city": "Stamford",
+    "state": "CT",
+    "businessType": "service",
+    "marketTier": "high-ticket",
+    "rating": 4.0,
+    "reviewCount": 9,
+    "weaknessHints": "missing schema|few reviews|no city pages|low authority"
+  }
+]

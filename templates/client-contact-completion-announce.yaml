@@ -1,0 +1,15 @@
+name: client-contact-completion-announce
+version: 1
+goal: Queue a polished internal completion email for the client-contact automation and expose the Gmail-ready payload.
+skill: client-contact-completion-announce
+steps:
+  - command: npm run announce:queue -- --type client-contact-completion
+  - command: npm run announce:payload -- --announcement-id {{announcementId}}
+  - connector: gmail
+  - command: npm run announce:mark-sent -- --announcement-id {{announcementId}} --message-id {{messageId}}
+outputs:
+  - queued_announcement
+  - gmail_payload
+guardrails:
+  - Keep the delivery internal-only.
+  - Use Gmail connector delivery, not SMTP.

@@ -1,0 +1,12 @@
+name: gbp-lead-scraper
+version: 1
+goal: Stage 50 to 75 qualified local GBP leads with visible weakness signals for Jose.
+skill: gbp-lead-scraper
+steps:
+  - command: npm run lead:scrape -- --client {{clientId}} --worker gbp-weakness-scan --limit {{leadLimit}}
+outputs:
+  - staged_leads
+  - jose_queue
+guardrails:
+  - Prefer weak but serviceable businesses over obvious spam.
+  - Do not trigger outreach directly from the scrape step.

@@ -1,0 +1,14 @@
+name: ai-visibility-positive-monitor
+version: 1
+goal: Collect AI visibility findings, split them, and keep only positive wins ready for reporting.
+skill: ai-visibility-positive-monitor
+steps:
+  - command: npm run worker:run -- --client {{clientId}}
+  - command: npm run signal:split -- --client {{clientId}}
+  - command: npm run report:queue -- --client {{clientId}}
+outputs:
+  - queued_client_report
+  - raw_snapshot
+guardrails:
+  - Stop quietly when there are zero positive findings.
+  - Do not send client email from the CLI; emit payload only.

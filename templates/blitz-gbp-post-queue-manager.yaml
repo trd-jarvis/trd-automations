@@ -1,0 +1,11 @@
+name: blitz-gbp-post-queue-manager
+version: 1
+goal: Prepare a Blitz-native GBP post queue plan for a configured client using live readiness data.
+skill: blitz-gbp-post-queue-manager
+steps:
+  - command: npm run blitz:post-plan -- --client {{clientId}}
+outputs:
+  - blitz_post_plan
+guardrails:
+  - Default to planning and review before live queue creation.
+  - Respect approved assets and existing sitemap/default post URL settings.

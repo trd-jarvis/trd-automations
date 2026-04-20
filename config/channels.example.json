@@ -1,0 +1,26 @@
+[
+  {
+    "key": "ops-slack",
+    "type": "slack",
+    "label": "Internal Ops Slack",
+    "destination": "SLACK_CHANNEL_ID_PENDING",
+    "placeholder": true,
+    "description": "Replace with the exact Slack channel ID once the app has been invited."
+  },
+  {
+    "key": "client-report-gmail",
+    "type": "gmail",
+    "label": "Client Report Gmail",
+    "destination": "jarvis@truerankdigital.com",
+    "placeholder": false,
+    "description": "Primary Gmail sender for client-facing positive reports."
+  },
+  {
+    "key": "shared-drive",
+    "type": "drive",
+    "label": "Shared Drive Relay",
+    "destination": "GOOGLE_DRIVE_FOLDER_PENDING",
+    "placeholder": true,
+    "description": "Set the destination folder or shared drive once available."
+  }
+]

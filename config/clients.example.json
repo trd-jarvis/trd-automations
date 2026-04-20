@@ -1,0 +1,49 @@
+[
+  {
+    "id": "trd-demo-client",
+    "name": "True Rank Demo HVAC",
+    "brandTerms": ["True Rank Demo HVAC", "Demo HVAC Springfield"],
+    "domains": ["demohvac.example.com"],
+    "startUrls": ["https://demohvac.example.com/"],
+    "competitors": ["Springfield HVAC Pros", "Elite Comfort Co"],
+    "reportRecipients": ["jon@truerankdigital.com"],
+    "reportCc": ["bishop@truerankdigital.com"],
+    "internalRecipients": [
+      "jose@truerankdigital.com",
+      "jon@truerankdigital.com",
+      "eric@truerankdigital.com",
+      "jesse@truerankdigital.com",
+      "bishop@truerankdigital.com"
+    ],
+    "blitzClientName": "True Rank Digital",
+    "blitzUrl": "https://trd-aiblitz.vercel.app/dashboard/blitz",
+    "websiteUrl": "https://demohvac.example.com",
+    "gbpUrl": "https://business.google.com/locations",
+    "workerKeys": [
+      "ai-overview-citations",
+      "brand-mention-discovery",
+      "site-entity-audit"
+    ],
+    "seedQueries": [
+      "best hvac company in springfield mo",
+      "springfield mo ac repair recommended",
+      "who is the top rated hvac company in springfield mo"
+    ],
+    "targetAreas": ["Springfield, MO", "Nixa, MO", "Ozark, MO"],
+    "icp": "Local home service businesses with weak AI visibility and under-optimized local authority signals.",
+    "primaryOffer": "AI visibility optimization, entity authority cleanup, and local lead generation.",
+    "leadBatchPolicy": {
+      "batchSize": 200,
+      "targetStates": ["NY", "NJ", "CT"],
+      "businessModel": "service",
+      "marketTier": "high-ticket"
+    },
+    "automationCadence": {
+      "positiveReport": "weekdays 8:00 AM Eastern",
+      "readinessAudit": "weekdays 9:00 AM Eastern",
+      "postQueue": "weekdays 9:30 AM Eastern",
+      "leadGeneration": "weekdays 7:00 AM Eastern",
+      "joseQueue": "weekdays 7:45 AM Eastern"
+    }
+  }
+]

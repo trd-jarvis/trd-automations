@@ -1,0 +1,128 @@
+[
+  {
+    "key": "ai-overview-citations",
+    "label": "AI Overview Citations",
+    "category": "ai-monitor",
+    "source": {
+      "type": "sample-file",
+      "path": "config/fixtures/ai-visibility-sample.json"
+    },
+    "datasetFields": {
+      "title": "title",
+      "url": "url",
+      "snippet": "snippet",
+      "publishedAt": "publishedAt",
+      "rank": "rank",
+      "rating": "rating"
+    },
+    "positiveRules": {
+      "requiredKeywords": ["recommended", "trusted", "top", "best"],
+      "boostKeywords": ["ai overview", "featured", "experts", "local favorite"],
+      "blockedKeywords": ["complaint", "lawsuit", "scam"],
+      "minimumScore": 42
+    },
+    "negativeRules": {
+      "requiredKeywords": ["missing", "low visibility", "complaint", "negative"],
+      "boostKeywords": ["not listed", "competitor", "weak authority"],
+      "blockedKeywords": ["best", "recommended"],
+      "minimumScore": 32
+    }
+  },
+  {
+    "key": "brand-mention-discovery",
+    "label": "Brand Mention Discovery",
+    "category": "review-monitor",
+    "source": {
+      "type": "sample-file",
+      "path": "config/fixtures/brand-mentions-sample.json"
+    },
+    "datasetFields": {
+      "title": "title",
+      "url": "url",
+      "snippet": "snippet",
+      "publishedAt": "publishedAt",
+      "rank": "rank",
+      "rating": "rating"
+    },
+    "positiveRules": {
+      "requiredKeywords": ["recommended", "award", "featured", "interview"],
+      "boostKeywords": ["podcast", "top", "trusted"],
+      "blockedKeywords": ["complaint", "refund", "scam"],
+      "minimumScore": 45
+    },
+    "negativeRules": {
+      "requiredKeywords": ["complaint", "refund", "scam"],
+      "boostKeywords": ["angry", "worst", "problem"],
+      "blockedKeywords": ["award", "recommended"],
+      "minimumScore": 28
+    }
+  },
+  {
+    "key": "site-entity-audit",
+    "label": "Site Entity Audit",
+    "category": "entity-audit",
+    "source": {
+      "type": "sample-file",
+      "path": "config/fixtures/entity-audit-sample.json"
+    },
+    "datasetFields": {
+      "title": "title",
+      "url": "url",
+      "snippet": "snippet",
+      "publishedAt": "publishedAt",
+      "rank": "rank",
+      "rating": "rating"
+    },
+    "positiveRules": {
+      "requiredKeywords": ["schema", "trust", "review", "location", "faq"],
+      "boostKeywords": ["author", "about us", "service area"],
+      "blockedKeywords": ["missing", "error"],
+      "minimumScore": 36
+    },
+    "negativeRules": {
+      "requiredKeywords": ["missing", "error", "broken", "incomplete"],
+      "boostKeywords": ["schema missing", "no location", "thin page"],
+      "blockedKeywords": ["trust", "review", "faq"],
+      "minimumScore": 30
+    }
+  },
+  {
+    "key": "gbp-weakness-scan",
+    "label": "GBP Weakness Scan",
+    "category": "lead-scrape",
+    "source": {
+      "type": "sample-file",
+      "path": "config/fixtures/gbp-leads-sample.json"
+    },
+    "datasetFields": {
+      "title": "company",
+      "url": "website",
+      "snippet": "weaknessHints",
+      "rank": "reviewCount",
+      "rating": "rating"
+    },
+    "leadFields": {
+      "company": "company",
+      "website": "website",
+      "phone": "phone",
+      "email": "email",
+      "city": "city",
+      "state": "state",
+      "rating": "rating",
+      "reviewCount": "reviewCount",
+      "weaknessHints": "weaknessHints"
+    },
+    "positiveRules": {
+      "requiredKeywords": ["weak site", "few reviews", "no faq"],
+      "boostKeywords": ["missing schema", "slow site"],
+      "blockedKeywords": ["dominant", "top rated"],
+      "minimumScore": 35
+    },
+    "negativeRules": {
+      "requiredKeywords": ["bad reviews", "complaints"],
+      "boostKeywords": ["rating drop", "spam listing"],
+      "blockedKeywords": ["5 stars", "recommended"],
+      "minimumScore": 26
+    }
+  }
+]

@@ -1,0 +1,12 @@
+name: lead-enrichment-and-scoring
+version: 1
+goal: Score staged leads and create approval-ready dispatch previews.
+skill: lead-enrichment-and-scoring
+steps:
+  - command: npm run lead:score -- --client {{clientId}}
+outputs:
+  - approval_queue
+  - dispatch_previews
+guardrails:
+  - Keep dispatch plans in approval-pending state.
+  - Use direct outreach tone with no filler.

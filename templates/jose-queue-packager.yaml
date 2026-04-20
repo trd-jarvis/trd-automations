@@ -1,0 +1,13 @@
+name: jose-queue-packager
+version: 1
+goal: Package the top scored lead batch for Jose after scoring and approval planning.
+skill: jose-queue-packager
+steps:
+  - command: npm run lead:score -- --client {{clientId}}
+  - command: npm run jose:queue -- --client {{clientId}}
+outputs:
+  - approval_ids
+  - jose_queue_package
+guardrails:
+  - Keep dispatch plans approval-gated.
+  - Do not send live outreach from this workflow.

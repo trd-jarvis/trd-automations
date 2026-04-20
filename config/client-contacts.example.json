@@ -1,0 +1,11 @@
+[
+  {
+    "clientId": "trd-demo-client",
+    "clientName": "True Rank Demo HVAC",
+    "primaryContactName": "Alex Demo",
+    "primaryContactEmail": "alex@demohvac.example.com",
+    "ccEmails": ["jon@truerankdigital.com"],
+    "title": "Owner",
+    "notes": "Replace this local example with the maintained TRD client-contact roster export."
+  }
+]

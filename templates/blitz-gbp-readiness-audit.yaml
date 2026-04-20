@@ -1,0 +1,14 @@
+name: blitz-gbp-readiness-audit
+version: 1
+goal: Audit live Blitz client readiness, export the results, and queue the internal readiness announcement.
+skill: blitz-gbp-readiness-audit
+steps:
+  - command: npm run blitz:readiness
+  - command: npm run share:drive
+outputs:
+  - readiness_export
+  - readiness_announcement
+  - drive_uploads
+guardrails:
+  - Keep the audit read-only against Blitz.
+  - Separate post-ready clients from setup-blocked clients.
