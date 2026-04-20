@@ -18,17 +18,26 @@ const envSchema = z.object({
   DATAFORSEO_PASSWORD: z.string().optional(),
   GEMINI_API_KEY: z.string().optional(),
   GEMINI_MODEL: z.string().default("gemini-3.0-flash"),
+  GEMINI_PROSPECTOR_MODEL: z.string().default("gemini-3.0-flash"),
+  BOOKING_PROVIDER: z.string().optional(),
+  BOOKING_URL: z.string().optional(),
   BOOKING_URL_CALENDLY: z.string().optional(),
+  BOOKING_URL_GOOGLE_CALENDAR: z.string().optional(),
   GHL_API_KEY: z.string().optional(),
   GHL_LOCATION_ID: z.string().optional(),
   GHL_BASE_URL: z.string().default("https://services.leadconnectorhq.com"),
   GHL_API_VERSION: z.string().default("2021-07-28"),
+  GHL_SYNC_ON_CALL_ATTEMPT: z.string().optional(),
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
   VAPI_API_KEY: z.string().optional(),
   VAPI_ASSISTANT_ID: z.string().optional(),
   VAPI_BASE_URL: z.string().default("https://api.vapi.ai"),
+  VAPI_PHONE_NUMBER_ID: z.string().optional(),
+  VAPI_OUTBOUND_VOICE_PROVIDER: z.string().optional(),
+  VAPI_OUTBOUND_VOICE_ID: z.string().optional(),
+  VAPI_OUTBOUND_VOICE_NAME: z.string().optional(),
   SLACK_BOT_TOKEN: z.string().optional(),
   SLACK_APP_TOKEN: z.string().optional(),
   SLACK_SIGNING_SECRET: z.string().optional(),
@@ -240,6 +249,17 @@ export function normalizeBlitzPlatformUrl(): string | undefined {
   return env.BLITZ_BASE_URL ?? env.NEXT_PUBLIC_SITE_URL ?? undefined;
 }
 
+export function resolvedBookingUrl(): string | undefined {
+  const provider = env.BOOKING_PROVIDER?.trim().toLowerCase();
+  if (provider === "google" && env.BOOKING_URL_GOOGLE_CALENDAR) {
+    return env.BOOKING_URL_GOOGLE_CALENDAR;
+  }
+  if (provider === "calendly" && env.BOOKING_URL_CALENDLY) {
+    return env.BOOKING_URL_CALENDLY;
+  }
+  return env.BOOKING_URL ?? env.BOOKING_URL_CALENDLY ?? env.BOOKING_URL_GOOGLE_CALENDAR ?? undefined;
+}
+
 export function resolveDefaultBlitzUrl(clientId: string): string | undefined {
   const baseUrl = normalizeBlitzPlatformUrl();
   if (!baseUrl) return undefined;
@@ -254,16 +274,44 @@ export function resolveDefaultBlitzUrl(clientId: string): string | undefined {
 
 function loadEnvFiles(): void {
   const defaultGoogleEnv = "/Users/jarvis/Documents/TRD-VOICE/env/googleautomations.env";
+  const defaultRailwayEnv = "/Users/jarvis/Documents/TRD-VOICE/env/railway.production.env";
   const candidates = [
     path.resolve(process.cwd(), ".env.local"),
     path.resolve(process.cwd(), ".env"),
     process.env.GOOGLE_AUTOMATIONS_ENV_PATH,
-    defaultGoogleEnv
+    defaultGoogleEnv,
+    defaultRailwayEnv
   ];
 
   for (const candidate of candidates) {
     if (candidate && existsSync(candidate)) {
-      loadDotEnv({ path: candidate, override: false });
+      const raw = readFileSync(candidate, "utf8");
+      const normalized = raw.replace(/\r/g, "");
+      const fragments = normalized
+        .split("\n")
+        .flatMap((line) => line.split(/\\n/g))
+        .map((line) => line.trim())
+        .filter(Boolean);
+
+      let loadedCustom = false;
+      for (const fragment of fragments) {
+        if (!/^[A-Za-z_][A-Za-z0-9_]*=/.test(fragment)) continue;
+        const separatorIndex = fragment.indexOf("=");
+        const key = fragment.slice(0, separatorIndex).trim();
+        const value = fragment
+          .slice(separatorIndex + 1)
+          .trim()
+          .replace(/^['"`]+/, "")
+          .replace(/['"`;,]+$/, "");
+        if (!Object.prototype.hasOwnProperty.call(process.env, key) || !process.env[key]) {
+          process.env[key] = value === "\\n" ? "" : value;
+        }
+        loadedCustom = true;
+      }
+
+      if (!loadedCustom) {
+        loadDotEnv({ path: candidate, override: false });
+      }
     }
   }
 }

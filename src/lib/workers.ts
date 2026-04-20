@@ -126,6 +126,7 @@ export function normalizeLeadRecords(client: ClientAccount, worker: WorkerDefini
       id: randomUUID(),
       clientId: client.id,
       workerKey: worker.key,
+      leadSource: "generated",
       company: asString(row[leadFields.company ?? "company"]) || "Unknown company",
       website: asString(row[leadFields.website ?? "website"]) || undefined,
       phone: asString(row[leadFields.phone ?? "phone"]) || undefined,
@@ -139,6 +140,9 @@ export function normalizeLeadRecords(client: ClientAccount, worker: WorkerDefini
       qualificationScore: 0,
       recommendedChannel: "email",
       status: "STAGED",
+      negativeAnalysisStatus: "PENDING",
+      voiceStatus: "PENDING",
+      smsStatus: "PENDING",
       raw: row,
       createdAt: now,
       updatedAt: now

@@ -93,6 +93,9 @@ export function computeLeadScores(lead: LeadRecord): LeadRecord {
     qualificationScore: Math.max(0, Math.min(100, baseQualification)),
     recommendedChannel,
     status: "APPROVAL_PENDING",
+    negativeAnalysisStatus: lead.negativeAnalysisStatus ?? "PENDING",
+    voiceStatus: lead.voiceStatus ?? "PENDING",
+    smsStatus: lead.smsStatus ?? "PENDING",
     updatedAt: new Date().toISOString()
   };
 }

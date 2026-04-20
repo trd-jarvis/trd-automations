@@ -1,0 +1,11 @@
+name: vapi-voice-batch-automation
+description: Analyze the next generated leads, assign Vapi slots, and prepare or queue a 10-lead outbound call batch.
+entry:
+  command: npm run voice:batch -- --client {{clientId}} --batch-size {{batchSize}} {{liveFlag}}
+defaults:
+  clientId: trd-demo-client
+  batchSize: 10
+  liveFlag: ""
+outputs:
+  - data/exports/*-voice-*.json
+  - queued-share-job

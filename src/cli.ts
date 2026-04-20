@@ -9,10 +9,18 @@ import { publishLogs } from "./lib/logs.js";
 import { queueClientReport, getQueuedReportPayload } from "./lib/reports.js";
 import { splitSignals } from "./lib/scoring.js";
 import { executeWorker, expandLeadPool, filterLeadPool, loadLeadSource, normalizeLeadRecords } from "./lib/workers.js";
-import { packageJoseQueue, scoreAndPlanLeads } from "./lib/outreach.js";
+import {
+  packageJoseQueue,
+  prepareGeneratedLeadEmails,
+  prepareVoiceBatch,
+  scoreAndPlanLeads,
+  sendSmsFollowUps,
+  syncGeneratedLeadsToGhl
+} from "./lib/outreach.js";
 import { getQueuedAnnouncementPayload, markAnnouncementSent, queueClientContactCompletionAnnouncement } from "./lib/announcements.js";
 import { auditBlitzReadiness, planBlitzPostQueue } from "./lib/blitz.js";
 import { uploadQueuedShareJobs } from "./lib/drive.js";
+import { listVapiAssistants, listVapiPhoneNumbers } from "./lib/vapi.js";
 
 const program = new Command();
 program.name("trd-automations");
@@ -205,6 +213,103 @@ program
       scored: result.scored.length,
       approvalIds: result.approvalIds,
       planIds: result.planIds
+    }, null, 2));
+  });
+
+program
+  .command("lead:sync-ghl")
+  .requiredOption("--client <clientId>", "Client identifier")
+  .option("--limit <count>", "Maximum generated leads to sync", "200")
+  .description("Sync generated lead-capture records into GHL and tag them for later filtering.")
+  .action(async (options: { client: string; limit: string }) => {
+    initDb();
+    const result = await syncGeneratedLeadsToGhl(options.client, Number(options.limit));
+    console.log(JSON.stringify({
+      ok: true,
+      synced: result.synced,
+      failed: result.failed,
+      sample: result.leads.slice(0, 5).map((lead) => ({
+        id: lead.id,
+        company: lead.company,
+        ghlContactId: lead.ghlContactId ?? null,
+        tags: lead.ghlTags ?? [],
+        error: lead.ghlLastError ?? null
+      }))
+    }, null, 2));
+  });
+
+program
+  .command("outreach:email-prepare")
+  .requiredOption("--client <clientId>", "Client identifier")
+  .option("--limit <count>", "Maximum generated leads to prepare", "25")
+  .description("Build sleek outbound email HTML and Gmail-ready payloads for generated leads.")
+  .action(async (options: { client: string; limit: string }) => {
+    initDb();
+    const result = await prepareGeneratedLeadEmails(options.client, Number(options.limit));
+    console.log(JSON.stringify({
+      ok: true,
+      prepared: result.prepared,
+      suppressed: result.suppressed,
+      exportPath: result.exportPath
+    }, null, 2));
+  });
+
+program
+  .command("voice:batch")
+  .requiredOption("--client <clientId>", "Client identifier")
+  .option("--batch-size <count>", "Max generated leads to assign in one voice rotation", "10")
+  .option("--live", "Create assistants, rotate phone numbers, and queue live Vapi calls")
+  .description("Analyze the next generated leads, assign up to 10 Vapi slots, and prepare or queue calls.")
+  .action(async (options: { client: string; batchSize: string; live?: boolean }) => {
+    initDb();
+    const result = await prepareVoiceBatch(options.client, Number(options.batchSize), Boolean(options.live));
+    console.log(JSON.stringify({
+      ok: true,
+      batchId: result.batchId,
+      selected: result.selected,
+      numbersUsed: result.numbersUsed,
+      exportPath: result.exportPath,
+      live: Boolean(options.live)
+    }, null, 2));
+  });
+
+program
+  .command("sms:followup")
+  .requiredOption("--client <clientId>", "Client identifier")
+  .option("--limit <count>", "Maximum leads to process", "10")
+  .option("--live", "Send live Twilio SMS follow-ups")
+  .description("Send or preview comedic post-call SMS follow-ups for generated leads.")
+  .action(async (options: { client: string; limit: string; live?: boolean }) => {
+    initDb();
+    const result = await sendSmsFollowUps(options.client, Number(options.limit), Boolean(options.live));
+    console.log(JSON.stringify({
+      ok: true,
+      processed: result.processed,
+      sent: result.sent,
+      exportPath: result.exportPath,
+      live: Boolean(options.live)
+    }, null, 2));
+  });
+
+program
+  .command("vapi:numbers")
+  .description("List Vapi phone numbers available for rotating outbound call batches.")
+  .action(async () => {
+    initDb();
+    console.log(JSON.stringify({
+      ok: true,
+      phoneNumbers: await listVapiPhoneNumbers()
+    }, null, 2));
+  });
+
+program
+  .command("vapi:assistants")
+  .description("List Vapi assistants available to the outbound automation stack.")
+  .action(async () => {
+    initDb();
+    console.log(JSON.stringify({
+      ok: true,
+      assistants: await listVapiAssistants()
     }, null, 2));
   });
 

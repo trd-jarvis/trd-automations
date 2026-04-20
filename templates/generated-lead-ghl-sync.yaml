@@ -1,0 +1,10 @@
+name: generated-lead-ghl-sync
+description: Sync generated lead-capture records into GHL and tag them for later filtering.
+entry:
+  command: npm run lead:sync-ghl -- --client {{clientId}} --limit {{limit}}
+defaults:
+  clientId: trd-demo-client
+  limit: 200
+outputs:
+  - data/exports/*-ghl-sync.json
+  - queued-share-job

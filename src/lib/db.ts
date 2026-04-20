@@ -122,6 +122,7 @@ export function initDb(): void {
       id TEXT PRIMARY KEY,
       client_id TEXT NOT NULL,
       worker_key TEXT NOT NULL,
+      lead_source TEXT NOT NULL DEFAULT 'generated',
       company TEXT NOT NULL,
       website TEXT,
       phone TEXT,
@@ -135,6 +136,32 @@ export function initDb(): void {
       qualification_score INTEGER NOT NULL DEFAULT 0,
       recommended_channel TEXT NOT NULL DEFAULT 'email',
       status TEXT NOT NULL,
+      ghl_contact_id TEXT,
+      ghl_tags_json TEXT,
+      ghl_synced_at TEXT,
+      ghl_last_error TEXT,
+      negative_analysis_status TEXT NOT NULL DEFAULT 'PENDING',
+      negative_analysis_json TEXT,
+      negative_analysis_generated_at TEXT,
+      email_subject TEXT,
+      email_body TEXT,
+      email_html_path TEXT,
+      email_payload_path TEXT,
+      email_prepared_at TEXT,
+      email_sent_at TEXT,
+      email_message_id TEXT,
+      voice_batch_id TEXT,
+      voice_slot_index INTEGER,
+      voice_phone_number_id TEXT,
+      voice_assistant_id TEXT,
+      voice_call_id TEXT,
+      voice_status TEXT NOT NULL DEFAULT 'PENDING',
+      voice_prepared_at TEXT,
+      voice_called_at TEXT,
+      sms_body TEXT,
+      sms_status TEXT NOT NULL DEFAULT 'PENDING',
+      sms_sid TEXT,
+      sms_sent_at TEXT,
       raw_json TEXT NOT NULL,
       created_at TEXT NOT NULL,
       updated_at TEXT NOT NULL
@@ -206,6 +233,33 @@ export function initDb(): void {
   addColumnIfMissing("share_jobs", "remote_id", "TEXT");
   addColumnIfMissing("share_jobs", "completed_at", "TEXT");
   addColumnIfMissing("share_jobs", "error_message", "TEXT");
+  addColumnIfMissing("leads", "lead_source", "TEXT NOT NULL DEFAULT 'generated'");
+  addColumnIfMissing("leads", "ghl_contact_id", "TEXT");
+  addColumnIfMissing("leads", "ghl_tags_json", "TEXT");
+  addColumnIfMissing("leads", "ghl_synced_at", "TEXT");
+  addColumnIfMissing("leads", "ghl_last_error", "TEXT");
+  addColumnIfMissing("leads", "negative_analysis_status", "TEXT NOT NULL DEFAULT 'PENDING'");
+  addColumnIfMissing("leads", "negative_analysis_json", "TEXT");
+  addColumnIfMissing("leads", "negative_analysis_generated_at", "TEXT");
+  addColumnIfMissing("leads", "email_subject", "TEXT");
+  addColumnIfMissing("leads", "email_body", "TEXT");
+  addColumnIfMissing("leads", "email_html_path", "TEXT");
+  addColumnIfMissing("leads", "email_payload_path", "TEXT");
+  addColumnIfMissing("leads", "email_prepared_at", "TEXT");
+  addColumnIfMissing("leads", "email_sent_at", "TEXT");
+  addColumnIfMissing("leads", "email_message_id", "TEXT");
+  addColumnIfMissing("leads", "voice_batch_id", "TEXT");
+  addColumnIfMissing("leads", "voice_slot_index", "INTEGER");
+  addColumnIfMissing("leads", "voice_phone_number_id", "TEXT");
+  addColumnIfMissing("leads", "voice_assistant_id", "TEXT");
+  addColumnIfMissing("leads", "voice_call_id", "TEXT");
+  addColumnIfMissing("leads", "voice_status", "TEXT NOT NULL DEFAULT 'PENDING'");
+  addColumnIfMissing("leads", "voice_prepared_at", "TEXT");
+  addColumnIfMissing("leads", "voice_called_at", "TEXT");
+  addColumnIfMissing("leads", "sms_body", "TEXT");
+  addColumnIfMissing("leads", "sms_status", "TEXT NOT NULL DEFAULT 'PENDING'");
+  addColumnIfMissing("leads", "sms_sid", "TEXT");
+  addColumnIfMissing("leads", "sms_sent_at", "TEXT");
 }
 
 export function startWorkerRun(client: ClientAccount, worker: WorkerDefinition): string {
@@ -491,9 +545,13 @@ export function markReportSent(reportId: string, signalIds: string[], messageId?
 export function upsertLeads(leads: LeadRecord[]): void {
   const stmt = db.prepare(`
     INSERT INTO leads (
-      id, client_id, worker_key, company, website, phone, email, city, state, rating_value, review_count, weakness_signals_json, weakness_score, qualification_score, recommended_channel, status, raw_json, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      id, client_id, worker_key, lead_source, company, website, phone, email, city, state, rating_value, review_count, weakness_signals_json, weakness_score, qualification_score, recommended_channel, status, ghl_contact_id, ghl_tags_json, ghl_synced_at, ghl_last_error, negative_analysis_status, negative_analysis_json, negative_analysis_generated_at, email_subject, email_body, email_html_path, email_payload_path, email_prepared_at, email_sent_at, email_message_id, voice_batch_id, voice_slot_index, voice_phone_number_id, voice_assistant_id, voice_call_id, voice_status, voice_prepared_at, voice_called_at, sms_body, sms_status, sms_sid, sms_sent_at, raw_json, created_at, updated_at
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
     ON CONFLICT(id) DO UPDATE SET
+      lead_source = excluded.lead_source,
       company = excluded.company,
       website = excluded.website,
       phone = excluded.phone,
@@ -507,6 +565,32 @@ export function upsertLeads(leads: LeadRecord[]): void {
       qualification_score = excluded.qualification_score,
       recommended_channel = excluded.recommended_channel,
       status = excluded.status,
+      ghl_contact_id = excluded.ghl_contact_id,
+      ghl_tags_json = excluded.ghl_tags_json,
+      ghl_synced_at = excluded.ghl_synced_at,
+      ghl_last_error = excluded.ghl_last_error,
+      negative_analysis_status = excluded.negative_analysis_status,
+      negative_analysis_json = excluded.negative_analysis_json,
+      negative_analysis_generated_at = excluded.negative_analysis_generated_at,
+      email_subject = excluded.email_subject,
+      email_body = excluded.email_body,
+      email_html_path = excluded.email_html_path,
+      email_payload_path = excluded.email_payload_path,
+      email_prepared_at = excluded.email_prepared_at,
+      email_sent_at = excluded.email_sent_at,
+      email_message_id = excluded.email_message_id,
+      voice_batch_id = excluded.voice_batch_id,
+      voice_slot_index = excluded.voice_slot_index,
+      voice_phone_number_id = excluded.voice_phone_number_id,
+      voice_assistant_id = excluded.voice_assistant_id,
+      voice_call_id = excluded.voice_call_id,
+      voice_status = excluded.voice_status,
+      voice_prepared_at = excluded.voice_prepared_at,
+      voice_called_at = excluded.voice_called_at,
+      sms_body = excluded.sms_body,
+      sms_status = excluded.sms_status,
+      sms_sid = excluded.sms_sid,
+      sms_sent_at = excluded.sms_sent_at,
       raw_json = excluded.raw_json,
       updated_at = excluded.updated_at
   `);
@@ -517,6 +601,7 @@ export function upsertLeads(leads: LeadRecord[]): void {
         lead.id,
         lead.clientId,
         lead.workerKey,
+        lead.leadSource,
         lead.company,
         lead.website ?? null,
         lead.phone ?? null,
@@ -530,6 +615,32 @@ export function upsertLeads(leads: LeadRecord[]): void {
         lead.qualificationScore,
         lead.recommendedChannel,
         lead.status,
+        lead.ghlContactId ?? null,
+        lead.ghlTags ? json(lead.ghlTags) : null,
+        lead.ghlSyncedAt ?? null,
+        lead.ghlLastError ?? null,
+        lead.negativeAnalysisStatus ?? "PENDING",
+        lead.negativeAnalysis ? json(lead.negativeAnalysis) : null,
+        lead.negativeAnalysisGeneratedAt ?? null,
+        lead.emailSubject ?? null,
+        lead.emailBody ?? null,
+        lead.emailHtmlPath ?? null,
+        lead.emailPayloadPath ?? null,
+        lead.emailPreparedAt ?? null,
+        lead.emailSentAt ?? null,
+        lead.emailMessageId ?? null,
+        lead.voiceBatchId ?? null,
+        lead.voiceSlotIndex ?? null,
+        lead.voicePhoneNumberId ?? null,
+        lead.voiceAssistantId ?? null,
+        lead.voiceCallId ?? null,
+        lead.voiceStatus ?? "PENDING",
+        lead.voicePreparedAt ?? null,
+        lead.voiceCalledAt ?? null,
+        lead.smsBody ?? null,
+        lead.smsStatus ?? "PENDING",
+        lead.smsSid ?? null,
+        lead.smsSentAt ?? null,
         json(lead.raw),
         lead.createdAt,
         lead.updatedAt
@@ -570,6 +681,7 @@ export function getLeads(clientId: string): LeadRecord[] {
     id: String(row.id),
     clientId: String(row.client_id),
     workerKey: String(row.worker_key),
+    leadSource: String(row.lead_source || "generated") as LeadRecord["leadSource"],
     company: String(row.company),
     website: typeof row.website === "string" ? row.website : undefined,
     phone: typeof row.phone === "string" ? row.phone : undefined,
@@ -583,10 +695,49 @@ export function getLeads(clientId: string): LeadRecord[] {
     qualificationScore: Number(row.qualification_score),
     recommendedChannel: row.recommended_channel as DispatchChannel,
     status: String(row.status) as LeadRecord["status"],
+    ghlContactId: typeof row.ghl_contact_id === "string" ? row.ghl_contact_id : undefined,
+    ghlTags: typeof row.ghl_tags_json === "string" ? JSON.parse(String(row.ghl_tags_json)) as string[] : undefined,
+    ghlSyncedAt: typeof row.ghl_synced_at === "string" ? row.ghl_synced_at : null,
+    ghlLastError: typeof row.ghl_last_error === "string" ? row.ghl_last_error : null,
+    negativeAnalysisStatus: String(row.negative_analysis_status || "PENDING") as LeadRecord["negativeAnalysisStatus"],
+    negativeAnalysis: typeof row.negative_analysis_json === "string"
+      ? JSON.parse(String(row.negative_analysis_json)) as NonNullable<LeadRecord["negativeAnalysis"]>
+      : null,
+    negativeAnalysisGeneratedAt: typeof row.negative_analysis_generated_at === "string" ? row.negative_analysis_generated_at : null,
+    emailSubject: typeof row.email_subject === "string" ? row.email_subject : undefined,
+    emailBody: typeof row.email_body === "string" ? row.email_body : undefined,
+    emailHtmlPath: typeof row.email_html_path === "string" ? row.email_html_path : null,
+    emailPayloadPath: typeof row.email_payload_path === "string" ? row.email_payload_path : null,
+    emailPreparedAt: typeof row.email_prepared_at === "string" ? row.email_prepared_at : null,
+    emailSentAt: typeof row.email_sent_at === "string" ? row.email_sent_at : null,
+    emailMessageId: typeof row.email_message_id === "string" ? row.email_message_id : null,
+    voiceBatchId: typeof row.voice_batch_id === "string" ? row.voice_batch_id : null,
+    voiceSlotIndex: typeof row.voice_slot_index === "number" ? row.voice_slot_index : null,
+    voicePhoneNumberId: typeof row.voice_phone_number_id === "string" ? row.voice_phone_number_id : null,
+    voiceAssistantId: typeof row.voice_assistant_id === "string" ? row.voice_assistant_id : null,
+    voiceCallId: typeof row.voice_call_id === "string" ? row.voice_call_id : null,
+    voiceStatus: String(row.voice_status || "PENDING") as LeadRecord["voiceStatus"],
+    voicePreparedAt: typeof row.voice_prepared_at === "string" ? row.voice_prepared_at : null,
+    voiceCalledAt: typeof row.voice_called_at === "string" ? row.voice_called_at : null,
+    smsBody: typeof row.sms_body === "string" ? row.sms_body : undefined,
+    smsStatus: String(row.sms_status || "PENDING") as LeadRecord["smsStatus"],
+    smsSid: typeof row.sms_sid === "string" ? row.sms_sid : null,
+    smsSentAt: typeof row.sms_sent_at === "string" ? row.sms_sent_at : null,
     raw: JSON.parse(String(row.raw_json)) as Record<string, unknown>,
     createdAt: String(row.created_at),
     updatedAt: String(row.updated_at)
   }));
+}
+
+export function getLeadById(leadId: string): LeadRecord | undefined {
+  const row = db.prepare(`
+    SELECT client_id AS clientId
+    FROM leads
+    WHERE id = ?
+    LIMIT 1
+  `).get(leadId) as { clientId?: string } | undefined;
+  if (!row?.clientId) return undefined;
+  return getLeads(String(row.clientId)).find((lead) => lead.id === leadId);
 }
 
 export function createApproval(leadId: string, clientId: string, channel: DispatchChannel, summary: string): string {

@@ -9,6 +9,23 @@ export type DispatchChannel = "email" | "sms" | "voice";
 export type ShareJobStatus = "QUEUED" | "UPLOADED" | "FAILED";
 export type AnnouncementAudience = "internal" | "client";
 export type AnnouncementStatus = "QUEUED" | "SENT";
+export type LeadPipelineStatus =
+  | "STAGED"
+  | "SCORED"
+  | "APPROVAL_PENDING"
+  | "READY"
+  | "DISPATCHED"
+  | "GHL_SYNCED"
+  | "ANALYZED"
+  | "EMAIL_READY"
+  | "VOICE_READY"
+  | "CALL_QUEUED"
+  | "SMS_READY"
+  | "SMS_SENT";
+export type LeadSource = "generated";
+export type NegativeAnalysisStatus = "PENDING" | "READY" | "FAILED";
+export type VoiceDispatchStatus = "PENDING" | "READY" | "QUEUED" | "FAILED";
+export type SmsDispatchStatus = "PENDING" | "READY" | "SENT" | "FAILED";
 
 export interface ClientAccount {
   id: string;
@@ -150,6 +167,7 @@ export interface LeadRecord {
   id: string;
   clientId: string;
   workerKey: string;
+  leadSource: LeadSource;
   company: string;
   website?: string;
   phone?: string;
@@ -162,7 +180,40 @@ export interface LeadRecord {
   weaknessScore: number;
   qualificationScore: number;
   recommendedChannel: DispatchChannel;
-  status: "STAGED" | "SCORED" | "APPROVAL_PENDING" | "READY" | "DISPATCHED";
+  status: LeadPipelineStatus;
+  ghlContactId?: string;
+  ghlTags?: string[];
+  ghlSyncedAt?: string | null;
+  ghlLastError?: string | null;
+  negativeAnalysisStatus?: NegativeAnalysisStatus;
+  negativeAnalysis?: {
+    summary: string;
+    issues: string[];
+    emailAngle: string;
+    voiceBrief: string;
+    smsAngle: string;
+    severityScore: number;
+  } | null;
+  negativeAnalysisGeneratedAt?: string | null;
+  emailSubject?: string;
+  emailBody?: string;
+  emailHtmlPath?: string | null;
+  emailPayloadPath?: string | null;
+  emailPreparedAt?: string | null;
+  emailSentAt?: string | null;
+  emailMessageId?: string | null;
+  voiceBatchId?: string | null;
+  voiceSlotIndex?: number | null;
+  voicePhoneNumberId?: string | null;
+  voiceAssistantId?: string | null;
+  voiceCallId?: string | null;
+  voiceStatus?: VoiceDispatchStatus;
+  voicePreparedAt?: string | null;
+  voiceCalledAt?: string | null;
+  smsBody?: string;
+  smsStatus?: SmsDispatchStatus;
+  smsSid?: string | null;
+  smsSentAt?: string | null;
   raw: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;

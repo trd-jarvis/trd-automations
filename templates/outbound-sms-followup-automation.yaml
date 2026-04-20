@@ -1,0 +1,11 @@
+name: outbound-sms-followup-automation
+description: Prepare or send post-call SMS follow-ups for generated leads.
+entry:
+  command: npm run sms:followup -- --client {{clientId}} --limit {{limit}} {{liveFlag}}
+defaults:
+  clientId: trd-demo-client
+  limit: 10
+  liveFlag: ""
+outputs:
+  - data/exports/*-sms-followup.json
+  - queued-share-job
