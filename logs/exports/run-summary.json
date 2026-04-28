@@ -1,6 +1,54 @@
 {
-  "generatedAt": "2026-04-27T03:47:17.135Z",
+  "generatedAt": "2026-04-28T03:47:01.112Z",
   "runs": [
+    {
+      "runId": "9bca0266-34e7-4c6c-86d7-9d88f055fe48",
+      "clientId": "trd-demo-client",
+      "workerKey": "site-entity-audit",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-27T22-17-59.027Z-trd-demo-client-site-entity-audit.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "41d88bdb-9134-4735-bc74-36b77dfbc46d",
+      "clientId": "trd-demo-client",
+      "workerKey": "brand-mention-discovery",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-27T22-17-59.026Z-trd-demo-client-brand-mention-discovery.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "d66199a0-6d4d-4e76-a9cc-9f8145d5e365",
+      "clientId": "trd-outbound-prospects",
+      "workerKey": "gbp-weakness-scan",
+      "status": "FAILED",
+      "sourceType": "apify-actor",
+      "itemCount": 0,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": null,
+      "errorMessage": "Monthly usage hard limit exceeded"
+    },
+    {
+      "runId": "67988a9a-bb3f-442e-8f11-b2b100ee692e",
+      "clientId": "trd-demo-client",
+      "workerKey": "ai-overview-citations",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-27T22-17-59.024Z-trd-demo-client-ai-overview-citations.json",
+      "errorMessage": null
+    },
     {
       "runId": "530a0936-aef2-47ec-a86b-dbcb03142bee",
       "clientId": "trd-outbound-prospects",
