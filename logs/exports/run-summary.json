@@ -1,6 +1,54 @@
 {
-  "generatedAt": "2026-04-28T03:47:01.112Z",
+  "generatedAt": "2026-04-29T03:46:01.697Z",
   "runs": [
+    {
+      "runId": "20a773d4-259a-4e83-b0cf-ef89501f01a0",
+      "clientId": "trd-demo-client",
+      "workerKey": "site-entity-audit",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-28T22-16-05.275Z-trd-demo-client-site-entity-audit.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "f457c089-b6b7-4c22-acfa-9bfcb914b0a9",
+      "clientId": "trd-demo-client",
+      "workerKey": "brand-mention-discovery",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-28T22-16-05.275Z-trd-demo-client-brand-mention-discovery.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "552f3ae4-dc95-42fb-8252-c60ff991abc2",
+      "clientId": "trd-demo-client",
+      "workerKey": "ai-overview-citations",
+      "status": "SUCCESS",
+      "sourceType": "sample-file",
+      "itemCount": 2,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": "/Users/jarvis/Documents/TRD-AUTOMATIONS/data/raw/2026-04-28T22-16-05.273Z-trd-demo-client-ai-overview-citations.json",
+      "errorMessage": null
+    },
+    {
+      "runId": "78dfde2d-0056-4f8b-ab5b-413ffdce22b1",
+      "clientId": "trd-outbound-prospects",
+      "workerKey": "gbp-weakness-scan",
+      "status": "FAILED",
+      "sourceType": "apify-actor",
+      "itemCount": 0,
+      "positiveCount": 0,
+      "negativeCount": 0,
+      "snapshotPath": null,
+      "errorMessage": "Monthly usage hard limit exceeded"
+    },
     {
       "runId": "9bca0266-34e7-4c6c-86d7-9d88f055fe48",
       "clientId": "trd-demo-client",
