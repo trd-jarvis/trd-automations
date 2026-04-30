@@ -173,11 +173,13 @@ Automations:
 
 - `TRD Repo Sync`
 - `TRD Vapi Credit Watch`
+- `TRD Voice Business Hours Healthcheck`
 
 Objective:
 
 - preserve the Git trail
 - keep Vapi credit/runway awareness current
+- make sure the outbound voice lane is actually hitting the 15-calls-per-hour floor during business hours
 
 ## 2. Weekly Timeline
 
@@ -311,4 +313,3 @@ Weekly:
 - Show where every artifact lands on disk.
 - Teach operators to read the exports before trusting the automation summary.
 - Teach the difference between preview/preparation and live dispatch.
-

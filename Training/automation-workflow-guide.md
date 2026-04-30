@@ -16,6 +16,7 @@ The definitions below are based on the current automation TOML files under `/Use
 | TRD Blitz Readiness | `trd-blitz-readiness` | ACTIVE | Weekdays 9:00 AM | Audit Blitz client readiness |
 | TRD Blitz Post Plans | `trd-blitz-post-plans` | ACTIVE | Weekdays 9:30 AM | Produce GBP post-planning outputs |
 | TRD Voice Batch Prep | `trd-voice-batch-prep` | ACTIVE | Weekdays 10:00 AM | Build the next 10-lead Vapi voice batch |
+| TRD Voice Business Hours Healthcheck | `trd-voice-business-hours-healthcheck` | ACTIVE | Weekdays hourly 9:05 AM - 5:05 PM | Check the 15-calls-per-hour floor and post Slack |
 | TRD SMS Follow-up Prep | `trd-sms-follow-up-prep` | ACTIVE | Weekdays 11:00 AM | Prepare post-call SMS follow-ups |
 | TRD Apify Worker Digest | `trd-apify-worker-digest` | ACTIVE | Weekdays 11:30 AM | Email Jon and Bishop the Apify health/usage digest |
 | TRD Apify Actor Discovery | `trd-apify-actor-discovery` | ACTIVE | Mondays 12:30 PM | Research new useful Apify actors |
@@ -682,7 +683,41 @@ This automation continuously monitors the Vapi budget surface so voice workflows
 
 This automation is a safety valve. It allows voice operations to be constrained by cost reality rather than enthusiasm.
 
-## 3.14 Client Contact Announce
+## 3.14 TRD Voice Business Hours Healthcheck
+
+### Identity
+
+- Name: `TRD Voice Business Hours Healthcheck`
+- ID: `trd-voice-business-hours-healthcheck`
+- Status: `ACTIVE`
+- Schedule: weekdays hourly at 9:05 AM through 5:05 PM
+
+### Purpose
+
+This automation checks the last business-hour call volume against the operational floor of 15 outbound calls per hour, using the live Vapi call feed and the 8am-5pm business-hours window.
+
+### Main Command
+
+- `npm run voice:healthcheck`
+
+### What It Does
+
+- fetches recent Vapi calls
+- checks the last 60 minutes against the 15-calls-per-hour threshold
+- records whether the window is healthy, warning, or critical
+- posts a concise Slack status to `C0ALTAAAX46`
+
+### Outputs
+
+- JSON healthcheck output
+- Slack-ready summary line
+- warning or blocker reason if volume falls short
+
+### Business Role
+
+This is the business-hours watchdog for the outbound voice lane. It confirms the dialer is actually moving enough calls during the workday instead of just being technically enabled.
+
+## 3.15 Client Contact Announce
 
 ### Identity
 
@@ -729,6 +764,7 @@ If the lead pipeline fails or returns an undersized batch, every downstream outb
 
 - `TRD Vapi Phone Pool`
 - `TRD Vapi Credit Watch`
+- `TRD Voice Business Hours Healthcheck`
 - previously scored leads
 
 If the phone pool is undersized or credits are unhealthy, the voice lane should stop safely.
@@ -752,7 +788,7 @@ If the phone pool is undersized or credits are unhealthy, the voice lane should 
 
 ## 4.5 Admin Dependency Chain
 
-`TRD Apify Worker Digest`, `TRD Apify Actor Discovery`, `TRD Repo Sync`, and `TRD Vapi Credit Watch` are governance automations. They are not direct revenue workflows, but they make the revenue workflows operationally safe and visible.
+`TRD Apify Worker Digest`, `TRD Apify Actor Discovery`, `TRD Repo Sync`, `TRD Vapi Credit Watch`, and `TRD Voice Business Hours Healthcheck` are governance automations. They are not direct revenue workflows, but they make the revenue workflows operationally safe and visible.
 
 ## 5. Most Important Operator Concepts
 
